@@ -1,1 +1,43 @@
-<p>bottom-screen works!</p>
+<div class="containers">
+  <div class="two-containers">
+    <div class="boxes">
+      <div></div>
+      <p class="status-dashboard">{{ queueStatusDashBoard }}</p>
+      <p class="queues">
+        <span class="total-queues-string">
+          {{ totalQueuesString }}
+        </span>
+        <span class="total-queues-int">
+          {{ totalQueuesInt }}
+        </span>
+      </p>
+    </div>
+    <div class="boxes">
+      <div>
+        {{ newMember }}
+      </div>
+      <div class="box">
+        <p class="box-bold-large">{{ newMemberInt }}</p>
+      </div>
+    </div>
+    <div class="boxes">
+      <div>
+        {{ renewal }}
+      </div>
+      <div class="box">
+        <p class="box-bold-large">{{ renewalInt }}</p>
+      </div>
+    </div>
+    <div class="boxes">
+      {{ retirement }}
+      <div class="box">
+        <p class="box-bold-large">{{ retirementInt }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="two-containers">
+    <p class="greetings">
+      <marquee behavior="scroll" direction="left">{{ greetings }}</marquee>
+    </p>
+  </div>
+</div>
