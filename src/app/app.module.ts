@@ -2,10 +2,22 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { MiddleScreenComponent } from './middle-screen/middle-screen.component';
+import { BottomScreenComponent } from './bottom-screen/bottom-screen.component';
+import { RightSideScreenComponent } from './right-side-screen/right-side-screen.component';
+import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
+import { MainComponent } from './main/main.component';
+import { ProcessingNumbersComponent } from './left-side-screen/processing-numbers/processing-numbers.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MiddleScreenComponent,
+    BottomScreenComponent,
+    RightSideScreenComponent,
+    LeftSideScreenComponent,
+    MainComponent,
+    ProcessingNumbersComponent
   ],
   imports: [
     BrowserModule
