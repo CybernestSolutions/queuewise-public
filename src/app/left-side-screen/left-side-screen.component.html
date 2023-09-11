@@ -1,1 +1,13 @@
-<p>left-side-screen works!</p>
+<div class="queueing-numbers">
+  <div class="counter">
+    <p>
+      {{ counter }}
+    </p>
+  </div>
+  <div class="queues" *ngFor="let process of processes">
+    <app-processing-numbers
+      [windowNum]="process.windowNum"
+      [queueNum]="process.queueNum"
+    ></app-processing-numbers>
+  </div>
+</div>
