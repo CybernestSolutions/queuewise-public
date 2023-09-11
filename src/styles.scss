@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+:root {
+  --color-red: #d91b04;
+  --color-light-red: #df4b03;
+  --color-orange: #ff9300;
+  --color-light-blue: #0a84a9;
+  --color-dark-blue: #003c67;
+  --color-white: #f1f1f1;
+}
+
+body {
+  background-image: url('../src/assets/images/background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}

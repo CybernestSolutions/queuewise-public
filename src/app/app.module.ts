@@ -8,6 +8,7 @@ import { RightSideScreenComponent } from './right-side-screen/right-side-screen.
 import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
 import { MainComponent } from './main/main.component';
 import { ProcessingNumbersComponent } from './left-side-screen/processing-numbers/processing-numbers.component';
+import { NextNumbersComponent } from './right-side-screen/next-numbers/next-numbers.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ProcessingNumbersComponent } from './left-side-screen/processing-number
     RightSideScreenComponent,
     LeftSideScreenComponent,
     MainComponent,
-    ProcessingNumbersComponent
+    ProcessingNumbersComponent,
+    NextNumbersComponent
   ],
   imports: [
     BrowserModule
