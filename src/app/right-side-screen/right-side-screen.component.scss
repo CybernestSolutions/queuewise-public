@@ -1,14 +1,23 @@
-.counter {
-  background-color: var(--color-dark-blue);
-  color: var(--color-white);
-  width: 100%;
-  margin-bottom: 10px;
-  font-size: 30px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
+.queueing-numbers {
+display: grid;
+grid-template-rows: 1fr 1fr;
+height: 100%;
 
-  p {
-    line-height: 0;
+  .counter {
+    background-color: var(--color-dark-blue);
+    color: var(--color-white);
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+
+    p {
+      line-height: 0;
+    }
+  }
+  .time{
+    align-self: end;
   }
 }

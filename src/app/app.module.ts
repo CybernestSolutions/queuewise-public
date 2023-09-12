@@ -9,6 +9,7 @@ import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.com
 import { MainComponent } from './main/main.component';
 import { ProcessingNumbersComponent } from './left-side-screen/processing-numbers/processing-numbers.component';
 import { NextNumbersComponent } from './right-side-screen/next-numbers/next-numbers.component';
+import { TimeComponent } from './right-side-screen/time/time.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NextNumbersComponent } from './right-side-screen/next-numbers/next-numb
     LeftSideScreenComponent,
     MainComponent,
     ProcessingNumbersComponent,
-    NextNumbersComponent
+    NextNumbersComponent,
+    TimeComponent
   ],
   imports: [
     BrowserModule

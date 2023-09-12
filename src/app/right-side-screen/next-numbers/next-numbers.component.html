@@ -1,5 +1,17 @@
-<div class="next-number-containter">
-  <div class="two-containters">contain</div>
-  <div class="two-containters">contain</div>
+<div *ngFor="let nextNumber of nextNumbers">
+  <div class="container">
+    <div class="inner" [class.inner-custom]="nextNumber.priority === 'PRIORITY'">
+      <p>
+        <span class="left">
+          {{ ticketNumberString }}
+        </span>
+        {{ nextNumber.queueNum }}
+      </p>
+    </div>
+    <div class="priority">
+      <p class="prio">
+        {{ nextNumber.priority }}
+      </p>
+    </div>
+  </div>
 </div>
-<!--  -->
