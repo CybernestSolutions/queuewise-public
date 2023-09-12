@@ -1,27 +1,28 @@
 .rectangle {
-  margin: 5px;
+  margin: 7px 0 7px 0;
   flex-direction: row;
   background-color: var(--color-dark-blue);
-  padding: 5px;
+  padding: 7px;
   border-radius: 10px;
   display: flex;
   color: var(--color-white);
   justify-content: space-between;
 
   .window-num {
-    margin-left: 12px;
+    text-align: right;
+    width: 30px;
     font-weight: bold;
     padding-top: 4px;
-    font-size: 30px;
+    font-size: 40px;
     position: absolute;
     align-self: center;
   }
 
   .odd-shape {
-    border-top: 50px solid var(--color-light-blue);
-    border-right: 20px solid transparent;
+    border-top: 48px solid var(--color-light-blue);
+    border-right: 35px solid transparent;
     height: 0;
-    width: 45px;
+    width: 75px;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
   }
@@ -31,6 +32,6 @@
     align-self: center;
     margin: 0;
     margin-right: 10px;
-    font-size: 30px;
+    font-size: 35px;
   }
 }
