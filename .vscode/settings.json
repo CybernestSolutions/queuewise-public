@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "component",
-        "assets"
+        "assets",
+        "electron"
     ]
 }

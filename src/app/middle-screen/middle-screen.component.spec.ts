@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MiddleScreenComponent } from './middle-screen.component';
+import { MiddleScreenComponent } from './MiddleScreenComponent';
 
 describe('MiddleScreenComponent', () => {
   let component: MiddleScreenComponent;
@@ -8,7 +8,7 @@ describe('MiddleScreenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MiddleScreenComponent]
+      declarations: [MiddleScreenComponent],
     });
     fixture = TestBed.createComponent(MiddleScreenComponent);
     component = fixture.componentInstance;

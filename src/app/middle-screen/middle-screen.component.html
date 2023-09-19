@@ -1,1 +1,31 @@
-<p>middle-screen works!</p>
+<div class="all">
+  <div class="video-container">
+    <video
+      id="video"
+      controls
+      autoplay
+      (ended)="playNextVideo()"
+      (play)="onPlay()"
+      (pause)="onPause()"
+    ></video>
+  </div>
+  <div class="overlay" *ngIf="showOverlay">
+    <div class="inside-overlay">
+      <div class="buttons">
+        <button (click)="selectVideos()">Select</button>
+        <button (click)="play()">Play All</button>
+      </div>
+      <div class="file-count">
+        <p *ngIf="selectedFileCount != 0">
+          {{ selectedFileCount }} Selected Files
+        </p>
+      </div>
+      <input
+        type="file"
+        id="fileInput"
+        (change)="handleFileInput($event)"
+        multiple
+      />
+    </div>
+  </div>
+</div>
