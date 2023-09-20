@@ -1,6 +1,6 @@
 <div *ngFor="let nextNumber of nextNumbers">
   <div class="container">
-    <div class="inner" [class.inner-custom]="nextNumber.priority === 'PRIORITY'">
+    <div class="inner" [class.inner-custom]="nextNumber.priority==true">
       <p>
         <span class="left">
           {{ ticketNumberString }}
@@ -9,8 +9,8 @@
       </p>
     </div>
     <div class="priority">
-      <p class="prio">
-        {{ nextNumber.priority }}
+      <p class="prio" *ngIf="nextNumber.priority==true">
+        {{ priorityString }}
       </p>
     </div>
   </div>

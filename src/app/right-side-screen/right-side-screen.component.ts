@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ProcessingService } from '../services/processing.service';
 
 @Component({
   selector: 'app-right-side-screen',
@@ -6,5 +7,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./right-side-screen.component.scss']
 })
 export class RightSideScreenComponent {
-
 }
