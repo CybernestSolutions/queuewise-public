@@ -5,9 +5,18 @@
     </p>
   </div>
   <div class="queues" *ngFor="let process of processes">
-    <app-processing-numbers
+    <div *ngIf="process.priority==isPriority">
+      <app-priority-processing-numbers
       [windowNum]="process.windowNum"
       [queueNum]="process.queueNum"
-    ></app-processing-numbers>
+      >
+      </app-priority-processing-numbers>
+    </div>
+    <div *ngIf="process.priority!=isPriority">
+      <app-processing-numbers
+        [windowNum]="process.windowNum"
+        [queueNum]="process.queueNum"
+      ></app-processing-numbers>
+    </div>
   </div>
 </div>

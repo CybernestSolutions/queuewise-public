@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeftSideScreenComponent } from './left-side-screen.component';
+import LeftSideScreenComponent from './left-side-screen.component';
 
 describe('LeftSideScreenComponent', () => {
   let component: LeftSideScreenComponent;
@@ -8,7 +8,7 @@ describe('LeftSideScreenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LeftSideScreenComponent]
+      declarations: [LeftSideScreenComponent],
     });
     fixture = TestBed.createComponent(LeftSideScreenComponent);
     component = fixture.componentInstance;

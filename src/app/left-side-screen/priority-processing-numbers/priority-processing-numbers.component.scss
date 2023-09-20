@@ -1,7 +1,7 @@
 .rectangle {
   margin: 7px 0 7px 0;
   flex-direction: row;
-  background-color: var(--color-dark-blue);
+  background-color: var(--color-orange);
   padding: 7px;
   border-radius: 10px;
   display: flex;
@@ -10,18 +10,16 @@
 
   .window-num {
     text-align: right;
-    line-height: 0;
-    letter-spacing: -3px;
     width: 30px;
     font-weight:var(--weight-bolder);
-    padding-top: -1px;
     font-size: 40px;
+    letter-spacing: -3px;
     position: absolute;
     align-self: center;
   }
 
   .odd-shape {
-    border-top: 48px solid var(--color-light-blue);
+    border-top: 48px solid var(--color-red);
     border-right: 35px solid transparent;
     height: 0;
     width: 77px;
@@ -30,10 +28,20 @@
   }
 
   .queue-num {
-    line-height: 0;
-    align-self: center;
     margin: 0;
     margin-right: 5px;
-    font-size: 35px;
+    color: var(--color-black);
+    font-weight: bold;
+    height: 30px;
+    .priority{
+      font-size: 15px;
+      text-align: right;
+      line-height: 0;
+      margin-top: -31px;
+    }
+    .queue-num-specific {
+      margin-top: 0;
+      font-size: 35px;
+    }
   }
 }
