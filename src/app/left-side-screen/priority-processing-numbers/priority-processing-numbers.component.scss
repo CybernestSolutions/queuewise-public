@@ -1,9 +1,12 @@
 .rectangle {
   margin: 7px 0 7px 0;
+  position: relative;
   flex-direction: row;
   background-color: var(--color-orange);
   padding: 7px;
   border-radius: 10px;
+
+  box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.7);
   display: flex;
   color: var(--color-white);
   justify-content: space-between;
@@ -11,7 +14,7 @@
   .window-num {
     text-align: right;
     width: 30px;
-    font-weight:var(--weight-bolder);
+    font-weight: var(--weight-bolder);
     font-size: 40px;
     letter-spacing: -3px;
     position: absolute;
@@ -33,15 +36,21 @@
     color: var(--color-black);
     font-weight: bold;
     height: 30px;
-    .priority{
+
+    .priority {
       font-size: 15px;
       text-align: right;
       line-height: 0;
       margin-top: -31px;
     }
+
     .queue-num-specific {
       margin-top: 0;
       font-size: 35px;
     }
   }
+}
+
+.z-index {
+  z-index: 1000;
 }

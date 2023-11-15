@@ -5,18 +5,53 @@
     </p>
   </div>
   <div class="queues" *ngFor="let process of processes">
-    <div *ngIf="process.priority==isPriority">
+    <div *ngIf="process.priority == isPriority">
       <app-priority-processing-numbers
-      [windowNum]="process.windowNum"
-      [queueNum]="process.queueNum"
+        [windowNum]="process.windowNum"
+        [queueNum]="process.queueNum"
       >
       </app-priority-processing-numbers>
     </div>
-    <div *ngIf="process.priority!=isPriority">
+    <div *ngIf="process.priority != isPriority">
       <app-processing-numbers
         [windowNum]="process.windowNum"
         [queueNum]="process.queueNum"
       ></app-processing-numbers>
     </div>
   </div>
+</div>
+<div class="emphasis-overlay" *ngIf="emphasizedQueues.queueNum">dasd</div>
+
+<div *ngIf="emphasizedQueues.queueNum" class="emphasized-queues">
+  <div class="qwise-logo-contain">
+    <img
+      src="assets/images/queuewise-logo.png"
+      alt="queuewise logo"
+      class="qwise-logo"
+    />
+  </div>
+  <span class="ticket-num-label">Ticket Number</span>
+  <span class="ticket-box"
+    ><span class="queue-num"> {{emphasizedQueues.queueNum||''}} </span>
+    <span>
+      <span class="service-type">Renewal</span>
+      -
+      <span class="is-priority">Regular</span>
+    </span></span
+  >
+
+  <span class="proceed">Please Proceed to </span>
+  <span class="counter-num">Counter 4</span>
+  <span class="org-logo-contain">
+    <img
+      src="assets/images/bplo-logo.png"
+      alt="queuewise logo"
+      class="org-logo"
+    />
+    <img
+      src="assets/images/binan-logo.png"
+      alt="queuewise logo"
+      class="org-logo"
+    />
+  </span>
 </div>

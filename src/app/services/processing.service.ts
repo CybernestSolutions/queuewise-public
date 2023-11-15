@@ -12,6 +12,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Renewal',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '2',
@@ -19,6 +20,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'New',
       priority: true,
+      emphasis: false,
     },
     {
       windowNum: '3',
@@ -26,6 +28,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Retirement',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '4',
@@ -33,6 +36,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Renewal',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '5',
@@ -40,6 +44,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'New',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '6',
@@ -47,6 +52,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Retirement',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '7',
@@ -54,6 +60,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Renewal',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '8',
@@ -61,6 +68,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'New',
       priority: false,
+      emphasis: false,
     },
     {
       windowNum: '9',
@@ -68,6 +76,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Retirement',
       priority: true,
+      emphasis: false,
     },
     {
       windowNum: '10',
@@ -75,6 +84,7 @@ export class ProcessingService {
       status: 'In Progress',
       type: 'Renewal',
       priority: false,
+      emphasis: false,
     },
   ];
 }

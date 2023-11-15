@@ -2,13 +2,101 @@
   background-color: var(--color-dark-blue);
   color: var(--color-white);
   width: 100%;
+  position: relative;
   margin-bottom: 10px;
   font-size: 30px;
   font-weight: bold;
+  z-index: 1000;
   display: flex;
   justify-content: center;
 
   p {
     line-height: 0;
+  }
+}
+
+.emphasis-overlay {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 400;
+  opacity: 0.9;
+  background-color: var(--color-black);
+}
+
+.emphasized-queues {
+  z-index: 500;
+  align-items: center;
+  position: absolute;
+  bottom: 3%;
+  height: 85%;
+  width: 77.5%;
+  padding: 20px;
+  border-radius: 20px;
+  right: 2%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  box-shadow: inset -7px -7px 15px rgba(0, 0, 0, 0.6);
+
+  .qwise-logo-contain {
+    width: 100%;
+  }
+
+  .qwise-logo {
+    height: 60px;
+  }
+
+  .org-logo-contain {
+    width: 100%;
+    text-align: right;
+  }
+
+  .org-logo {
+    height: 100px;
+  }
+
+  .ticket-num-label {
+    font-size: 50px;
+    color: var(--color-light-blue);
+    font-weight: bold;
+  }
+
+  .ticket-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0px;
+    width: 750px;
+    height: 300px;
+    border: 2px solid var(--color-dark-blue);
+    padding: 10px;
+    border-radius: 30px;
+
+    .queue-num {
+      color: var(--color-dark-blue-green);
+      font-weight: bold;
+      font-size: 200px;
+    }
+
+    .service-type {
+      font-style: italic;
+    }
+
+  }
+
+  .proceed {
+    color: var(--color-light-blue);
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .counter-num {
+    font-size: 90px;
+    font-weight: bold;
+    color: var(--color-dark-blue-green);
   }
 }
