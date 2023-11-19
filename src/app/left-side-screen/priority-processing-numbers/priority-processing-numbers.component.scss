@@ -4,8 +4,9 @@
   flex-direction: row;
   background-color: var(--color-orange);
   padding: 7px;
-  border-radius: 10px;
-
+  width: 360px;
+  border-radius: 15px;
+  height: 75px;
   box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.7);
   display: flex;
   color: var(--color-white);
@@ -13,19 +14,19 @@
 
   .window-num {
     text-align: right;
-    width: 30px;
+    width: 50px;
     font-weight: var(--weight-bolder);
-    font-size: 40px;
+    font-size: 50px;
     letter-spacing: -3px;
     position: absolute;
     align-self: center;
   }
 
   .odd-shape {
-    border-top: 48px solid var(--color-red);
+    border-top: 60px solid var(--color-red);
     border-right: 35px solid transparent;
     height: 0;
-    width: 77px;
+    width: 100px;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
   }
@@ -41,12 +42,12 @@
       font-size: 15px;
       text-align: right;
       line-height: 0;
-      margin-top: -31px;
+      margin-top: -50px;
     }
 
     .queue-num-specific {
-      margin-top: 0;
-      font-size: 35px;
+      margin-top: -5px;
+      font-size: 50px;
     }
   }
 }

@@ -8,7 +8,9 @@
   color: var(--color-dark-blue);
   padding-right: 10px;
   grid-template-rows: 1fr 1fr;
-  margin: 5px 0px 5px 0px;
+  margin: 8px 0px 8px 0px;
+  box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.7);
+
 
   .inner {
     grid-row: 1/2;
@@ -43,5 +45,3 @@
     }
   }
 }
-
-

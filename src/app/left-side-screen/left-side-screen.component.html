@@ -1,22 +1,24 @@
 <div class="queueing-numbers">
   <div class="counter">
-    <p>
+    <span>
       {{ counter }}
-    </p>
+    </span>
   </div>
-  <div class="queues" *ngFor="let process of processes">
-    <div *ngIf="process.priority == isPriority">
-      <app-priority-processing-numbers
-        [windowNum]="process.windowNum"
-        [queueNum]="process.queueNum"
-      >
-      </app-priority-processing-numbers>
-    </div>
-    <div *ngIf="process.priority != isPriority">
-      <app-processing-numbers
-        [windowNum]="process.windowNum"
-        [queueNum]="process.queueNum"
-      ></app-processing-numbers>
+  <div class="queue-container">
+    <div class="queues" *ngFor="let process of processes">
+      <div *ngIf="process.priority == isPriority">
+        <app-priority-processing-numbers
+          [windowNum]="process.windowNum"
+          [queueNum]="process.queueNum"
+        >
+        </app-priority-processing-numbers>
+      </div>
+      <div *ngIf="process.priority != isPriority">
+        <app-processing-numbers
+          [windowNum]="process.windowNum"
+          [queueNum]="process.queueNum"
+        ></app-processing-numbers>
+      </div>
     </div>
   </div>
 </div>
@@ -32,11 +34,11 @@
   </div>
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box"
-    ><span class="queue-num"> {{emphasizedQueues.queueNum||''}} </span>
-    <span>
-      <span class="service-type">Renewal</span>
+    ><span class="queue-num"> {{ emphasizedQueues.queueNum || "" }} </span>
+    <span class="type-priority">
+      <span>Renewal</span>
       -
-      <span class="is-priority">Regular</span>
+      <span>Regular</span>
     </span></span
   >
 

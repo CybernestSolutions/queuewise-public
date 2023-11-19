@@ -86,5 +86,29 @@ export class ProcessingService {
       priority: false,
       emphasis: false,
     },
+    {
+      windowNum: '11',
+      queueNum: 'B0321',
+      status: 'In Progress',
+      type: 'Renewal',
+      priority: false,
+      emphasis: false,
+    },
+    {
+      windowNum: '12',
+      queueNum: 'B0321',
+      status: 'In Progress',
+      type: 'Renewal',
+      priority: false,
+      emphasis: false,
+    },
+    {
+      windowNum: '13',
+      queueNum: 'B0321',
+      status: 'In Progress',
+      type: 'Renewal',
+      priority: false,
+      emphasis: false,
+    },
   ];
 }

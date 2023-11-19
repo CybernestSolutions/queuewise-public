@@ -1,15 +1,17 @@
 .queueing-numbers {
-display: grid;
-grid-template-rows: 1fr 1fr;
-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  height: 100%;
 
   .counter {
     background-color: var(--color-dark-blue);
     color: var(--color-white);
     width: 100%;
     margin-bottom: 10px;
-    font-size: 30px;
+    font-size: 50px;
+    margin-top: 5px;
     font-weight: bold;
+    padding: 5px 0;
     display: flex;
     justify-content: center;
 
@@ -17,7 +19,8 @@ height: 100%;
       line-height: 0;
     }
   }
-  .time{
+
+  .time {
     align-self: end;
   }
 }
