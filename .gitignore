@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 /out
+/src/assets/videos
 
 # Node
 /node_modules

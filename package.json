@@ -11,7 +11,7 @@
     "test": "ng test",
     "electron": "electron .",
     "electron-build": "electron-builder",
-    "package": "electron-packager . queuewise-public-view --platform=win32 --arch=x64 --out=dist --no-prune --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite"
+    "package": "electron-packager . queuewise-public-view --platform=win32 --arch=x64 --out=dist --no-prune --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --icon=/src/assets/icon-glow.ico"
   },
   "private": true,
   "dependencies": {
@@ -46,13 +46,13 @@
   "build": {
     "asar": true,
     "appId": "com.example.queuewise-public-view",
-    "productName": "queuewise-public-view",
+    "productName": "Queuewise Public View",
     "directories": {
       "output": "dist"
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "src/assets/icon-glow.ico"
     }
   }
 }

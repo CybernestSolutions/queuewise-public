@@ -2,7 +2,8 @@
   "conventionalCommits.scopes": [
     "component",
     "assets",
-    "electron"
+    "electron",
+    "gitignore"
   ],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#256c4d",

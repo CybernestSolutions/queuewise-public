@@ -18,6 +18,7 @@ function createWindow() {
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, 'out/queuewise-public-view/index.html'),
+      icon: path.join(__dirname, 'src/assets/', 'icon-glow.ico'),
       protocol: 'file:',
       slashes: true,
     })
@@ -27,7 +28,6 @@ function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.openDevTools(); // Open DevTools here
 
   mainWindow.setFullScreen(true); // Set to false if you want to exit full screen.
 }
