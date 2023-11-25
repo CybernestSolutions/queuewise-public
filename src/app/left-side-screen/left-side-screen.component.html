@@ -5,18 +5,18 @@
     </span>
   </div>
   <div class="queue-container">
-    <div class="queues" *ngFor="let process of processes">
-      <div *ngIf="process.priority == isPriority">
+    <div class="queues" *ngFor="let process of processingService.processes">
+      <div *ngIf="process.tellerType==='priority'">
         <app-priority-processing-numbers
-          [windowNum]="process.windowNum"
-          [queueNum]="process.queueNum"
+          [windowNum]="process.tellerNum"
+          [queueNum]="process.queue?.queueNum"
         >
         </app-priority-processing-numbers>
       </div>
-      <div *ngIf="process.priority != isPriority">
+      <div *ngIf="process.tellerType=='regular'">
         <app-processing-numbers
-          [windowNum]="process.windowNum"
-          [queueNum]="process.queueNum"
+          [windowNum]="process.tellerNum"
+          [queueNum]="process.queue?.queueNum"
         ></app-processing-numbers>
       </div>
     </div>

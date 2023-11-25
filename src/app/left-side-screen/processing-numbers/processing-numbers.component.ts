@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class ProcessingNumbersComponent {
   @Input() windowNum: string | undefined;
   @Input() queueNum: string | undefined;
+  @Input() status: string | undefined;
 }

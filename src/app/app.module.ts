@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { PriorityProcessingNumbersComponent } from './left-side-screen/priority-processing-numbers/priority-processing-numbers.component';
 import { ProcessingService } from './services/processing.service';
 import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,9 @@ import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.com
     NextNumbersComponent,
     TimeComponent,
     PriorityProcessingNumbersComponent,
-    LeftSideScreenComponent
+    LeftSideScreenComponent,
   ],
-  imports: [BrowserModule, FormsModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [ProcessingService],
   bootstrap: [AppComponent],
 })
