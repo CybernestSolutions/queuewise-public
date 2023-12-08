@@ -14,6 +14,12 @@ import { PriorityProcessingNumbersComponent } from './left-side-screen/priority-
 import { ProcessingService } from './services/processing.service';
 import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const config: SocketIoConfig = {
+  url: 'http://192.168.100.12:3000',
+  options: {},
+};
 
 @NgModule({
   declarations: [
@@ -28,7 +34,8 @@ import { HttpClientModule } from '@angular/common/http';
     PriorityProcessingNumbersComponent,
     LeftSideScreenComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule,
+    SocketIoModule.forRoot(config),],
   providers: [ProcessingService],
   bootstrap: [AppComponent],
 })

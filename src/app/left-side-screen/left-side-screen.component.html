@@ -5,15 +5,15 @@
     </span>
   </div>
   <div class="queue-container">
-    <div class="queues" *ngFor="let process of processingService.processes">
-      <div *ngIf="process.tellerType==='priority'">
+    <div class="queues" *ngFor="let process of processes">
+      <div *ngIf="process.tellerType === 'priority' && process.active == true">
         <app-priority-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
         >
         </app-priority-processing-numbers>
       </div>
-      <div *ngIf="process.tellerType=='regular'">
+      <div *ngIf="process.tellerType == 'regular' && process.active == true">
         <app-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
@@ -22,9 +22,11 @@
     </div>
   </div>
 </div>
-<div class="emphasis-overlay" *ngIf="emphasizedQueues.queueNum">dasd</div>
 
-<div *ngIf="emphasizedQueues.queueNum" class="emphasized-queues">
+<div
+  *ngIf="emphasizedQueuesService.emphasizedQueues[0]"
+  class="emphasized-queues"
+>
   <div class="qwise-logo-contain">
     <img
       src="assets/images/queuewise-logo.png"
@@ -34,26 +36,33 @@
   </div>
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box"
-    ><span class="queue-num"> {{ emphasizedQueues.queueNum || "" }} </span>
+    ><span class="queue-num">
+      {{ emphasizedQueuesService.emphasizedQueues.queueNum || "" }}
+    </span>
     <span class="type-priority">
-      <span>Renewal</span>
+      <span>{{ emphasizedQueuesService.emphasizedQueues.type }}</span>
       -
-      <span>Regular</span>
-    </span></span
-  >
+      <span *ngIf="emphasizedQueuesService.emphasizedQueues.priority"
+        >Priority</span
+      >
+      <span *ngIf="!emphasizedQueuesService.emphasizedQueues.priority"
+        >Regular</span
+      >
+    </span>
 
-  <span class="proceed">Please Proceed to </span>
-  <span class="counter-num">Counter 4</span>
-  <span class="org-logo-contain">
-    <img
-      src="assets/images/bplo-logo.png"
-      alt="queuewise logo"
-      class="org-logo"
-    />
-    <img
-      src="assets/images/binan-logo.png"
-      alt="queuewise logo"
-      class="org-logo"
-    />
+    <span class="proceed">Please Proceed to </span>
+    <span class="counter-num">Counter 4</span>
+    <span class="org-logo-contain">
+      <img
+        src="assets/images/bplo-logo.png"
+        alt="queuewise logo"
+        class="org-logo"
+      />
+      <img
+        src="assets/images/binan-logo.png"
+        alt="queuewise logo"
+        class="org-logo"
+      />
+    </span>
   </span>
 </div>

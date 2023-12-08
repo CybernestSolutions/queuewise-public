@@ -11,9 +11,9 @@ export class ProcessingService {
 
   getTellers(){
     this.tellerService.getTellersByType('').subscribe((tellers) => {
+
       this.processes = tellers;
       console.log(this.processes);
-
     });
   }
 }
