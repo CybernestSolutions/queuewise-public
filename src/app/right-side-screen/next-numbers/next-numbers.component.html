@@ -1,17 +1,22 @@
-<div *ngFor="let nextNumber of nextNumbers">
-  <div class="container">
-    <div class="inner" [class.inner-custom]="nextNumber.priority==true">
-      <p>
-        <span class="left">
-          {{ ticketNumberString }}
-        </span>
-        {{ nextNumber.queueNum }}
-      </p>
-    </div>
-    <div class="priority">
-      <p class="prio" *ngIf="nextNumber.priority==true">
-        {{ priorityString }}
-      </p>
+<section
+  class="next-num-container"
+  *ngIf="processingData.nextQueues[0].queueNum != ''"
+>
+  <div *ngFor="let nextNumber of processingData.nextQueues | slice:0:8">
+    <div class="container">
+      <div class="inner" [class.inner-custom]="nextNumber.priority == true">
+        <p>
+          <span class="left">
+            {{ ticketNumberString }}
+          </span>
+          {{ nextNumber.queueNum }}
+        </p>
+      </div>
+      <div class="priority">
+        <p class="prio" *ngIf="nextNumber.priority == true">
+          {{ priorityString }}
+        </p>
+      </div>
     </div>
   </div>
-</div>
+</section>

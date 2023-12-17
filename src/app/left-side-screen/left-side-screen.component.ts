@@ -12,7 +12,6 @@ import { TellerService } from '../services/teller.service';
 })
 export class LeftSideScreenComponent implements OnInit {
   constructor(
-    private processingService: ProcessingService,
     public emphasizedQueuesService: EmphasizedQueuesService,
     private webSocketService: WebSocketService,
     private tellerService: TellerService
@@ -23,7 +22,7 @@ export class LeftSideScreenComponent implements OnInit {
   processes: any;
 
   ngOnInit(): void {
-    this.emphasizedQueuesService.getEmphasisList();
+    // this.emphasizedQueuesService.getEmphasisList();
     this.tellerService.getTellersByType('').subscribe((tellers) => {
       this.processes = tellers;
       console.log(this.processes);
@@ -34,7 +33,7 @@ export class LeftSideScreenComponent implements OnInit {
 
   private setupWebSocket() {
     this.webSocketService.onQueueUpdate().subscribe((data: any) => {
-      this.emphasizedQueuesService.getEmphasisList();
+      // this.emphasizedQueuesService.getEmphasisList();
       this.tellerService.getTellersByType('').subscribe((tellers) => {
         this.processes = tellers;
         console.log(this.processes);

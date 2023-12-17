@@ -22,9 +22,12 @@
     </div>
   </div>
 </div>
-
 <div
-  *ngIf="emphasizedQueuesService.emphasizedQueues[0]"
+  class="emphasis-overlay"
+  *ngIf="emphasizedQueuesService.emphasizedQueues[0].queueNum != ''"
+></div>
+<div
+  *ngIf="emphasizedQueuesService.emphasizedQueues[0].queueNum != ''"
   class="emphasized-queues"
 >
   <div class="qwise-logo-contain">
@@ -37,32 +40,34 @@
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box"
     ><span class="queue-num">
-      {{ emphasizedQueuesService.emphasizedQueues.queueNum || "" }}
+      {{ emphasizedQueuesService.emphasizedQueues[0].queueNum || "" }}
     </span>
     <span class="type-priority">
-      <span>{{ emphasizedQueuesService.emphasizedQueues.type }}</span>
+      <span>{{ emphasizedQueuesService.emphasizedQueues[0].type }}</span>
       -
-      <span *ngIf="emphasizedQueuesService.emphasizedQueues.priority"
+      <span *ngIf="emphasizedQueuesService.emphasizedQueues[0].priority"
         >Priority</span
       >
-      <span *ngIf="!emphasizedQueuesService.emphasizedQueues.priority"
+      <span *ngIf="!emphasizedQueuesService.emphasizedQueues[0].priority"
         >Regular</span
       >
     </span>
 
     <span class="proceed">Please Proceed to </span>
-    <span class="counter-num">Counter 4</span>
-    <span class="org-logo-contain">
-      <img
-        src="assets/images/bplo-logo.png"
-        alt="queuewise logo"
-        class="org-logo"
-      />
-      <img
-        src="assets/images/binan-logo.png"
-        alt="queuewise logo"
-        class="org-logo"
-      />
-    </span>
+    <span class="counter-num"
+      >Counter {{ emphasizedQueuesService.emphasizedQueues[0].windowNum }}</span
+    >
+  </span>
+  <span class="org-logo-contain">
+    <img
+      src="assets/images/bplo-logo.png"
+      alt="queuewise logo"
+      class="org-logo"
+    />
+    <img
+      src="assets/images/binan-logo.png"
+      alt="queuewise logo"
+      class="org-logo"
+    />
   </span>
 </div>

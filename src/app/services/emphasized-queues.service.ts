@@ -5,13 +5,15 @@ import { TellerService } from './teller.service';
   providedIn: 'root',
 })
 export class EmphasizedQueuesService {
-  emphasizedQueues: any = [];
+  emphasizedQueues: any = [
+    {queueNum:'',type:'New', priority:true, windowNum:'1'}
+  ];
   constructor(private tellerService: TellerService) {}
 
-  getEmphasisList() {
-    this.tellerService.getEmphasizedWindows().subscribe((emphasizedQueues) => {
-      this.emphasizedQueues = emphasizedQueues;
-      console.log(this.emphasizedQueues);
-    });
-  }
+  // getEmphasisList() {
+  //   this.tellerService.getEmphasizedWindows().subscribe((emphasizedQueues) => {
+  //     this.emphasizedQueues = emphasizedQueues;
+  //     console.log(this.emphasizedQueues);
+  //   });
+  // }
 }

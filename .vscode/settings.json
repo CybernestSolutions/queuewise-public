@@ -3,7 +3,8 @@
     "component",
     "assets",
     "electron",
-    "gitignore"
+    "gitignore",
+    "package"
   ],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#256c4d",

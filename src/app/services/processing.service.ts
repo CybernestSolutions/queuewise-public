@@ -8,6 +8,9 @@ import { TellerService } from './teller.service';
 export class ProcessingService {
   constructor(private tellerService: TellerService) {}
   processes: any[] = [];
+  nextQueues: any[] = [
+    {queueNum: '', priority: null},
+  ];
 
   getTellers(){
     this.tellerService.getTellersByType('').subscribe((tellers) => {
@@ -16,4 +19,13 @@ export class ProcessingService {
       console.log(this.processes);
     });
   }
+
+  getNextQueues(){
+    this.tellerService.getNextQueues().subscribe((queues) => {
+      this.nextQueues = queues;
+      console.log(this.nextQueues);
+    });
+  }
+
+
 }

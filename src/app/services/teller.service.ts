@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TellerService {
-  private apiUrl = 'http://192.168.100.12:3000';
+  private apiUrl = 'http://192.168.100.29:3000';
 
   constructor(private http: HttpClient) {}
 
@@ -19,5 +19,8 @@ export class TellerService {
     const url = `${this.apiUrl}/emphasis-list`;
     return this.http.get<any[]>(url);
   }
-  
+  getNextQueues(){
+    const url = `${this.apiUrl}/queue`;
+    return this.http.get<any[]>(url);
+  }
 }

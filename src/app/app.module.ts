@@ -17,7 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 const config: SocketIoConfig = {
-  url: 'http://192.168.100.12:3000',
+  url: 'http://192.168.100.29:3000',
   options: {},
 };
 
@@ -34,8 +34,12 @@ const config: SocketIoConfig = {
     PriorityProcessingNumbersComponent,
     LeftSideScreenComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule,
-    SocketIoModule.forRoot(config),],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    SocketIoModule.forRoot(config),
+  ],
   providers: [ProcessingService],
   bootstrap: [AppComponent],
 })
