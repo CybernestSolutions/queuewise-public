@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class PriorityProcessingNumbersComponent {
   @Input() windowNum: string | undefined;
   @Input() queueNum: string | undefined;
+  @Input() emphasis: boolean | undefined;
 }

@@ -12,7 +12,7 @@ export class NextNumbersComponent implements OnInit {
   ticketNumberString = TICKET_NUMBER;
   priorityString = 'PRIORITY';
   nextQueues: any[] = [
-    {queueNumber: 'A001', priority: true},
+    {queueNumber: '', priority: null},
   ];
   constructor(
     public processingData: ProcessingService,
@@ -21,6 +21,7 @@ export class NextNumbersComponent implements OnInit {
   ngOnInit() {
     this.processingData.getNextQueues();
     this.setupWebSocket();
+    
   }
   private setupWebSocket() {
     this.webSocketService.onQueueUpdate().subscribe((data: any) => {

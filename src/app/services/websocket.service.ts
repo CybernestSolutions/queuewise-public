@@ -21,4 +21,8 @@ export class WebSocketService {
   public userCapacityUpdate() {
     return this.socket.fromEvent('userCapacityUpdate');
   }
+
+  public emphasisUpdate(){
+    return this.socket.fromEvent('emphasisUpdate');
+  }
 }

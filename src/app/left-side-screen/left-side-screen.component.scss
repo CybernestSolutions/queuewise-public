@@ -29,6 +29,9 @@
 
 .queue-container{
   height: 100%;
+  .z-index{
+    z-index: 1000;
+  }
 }
 
 .emphasized-queues {

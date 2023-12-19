@@ -1,36 +1,48 @@
 import { Injectable } from '@angular/core';
-
 @Injectable({
   providedIn: 'root'
 })
 export class TextToSpeechService {
   private synth: SpeechSynthesis;
-  voices: SpeechSynthesisVoice[];
+  private voicesLoaded: boolean = false;
+  private defaultVoice: SpeechSynthesisVoice | null = null;
+  private queuedText: string | null = null;
+  private queuedRate: number = 0.7;
 
   constructor() {
     this.synth = window.speechSynthesis;
-    this.voices = [];
     this.fetchVoices();
   }
 
   fetchVoices(): void {
-    this.voices = this.synth.getVoices();
-    if (this.voices.length === 0) {
-      // If voices are not yet loaded, wait for voiceschanged event
-      this.synth.onvoiceschanged = () => {
-        this.voices = this.synth.getVoices();
-      };
-    }
+    this.synth.onvoiceschanged = () => {
+      this.defaultVoice = this.findDefaultVoice(this.synth.getVoices());
+      this.voicesLoaded = true;
+      if (this.queuedText !== null) {
+        this.speak(this.queuedText, this.queuedRate);
+        this.queuedText = null;
+      }
+    };
   }
 
-  speak(text: string, selectedVoiceIndex: number, rate: number): void {
-    const utterThis = new SpeechSynthesisUtterance(text);
-    if (this.voices.length > 0) {
-      utterThis.voice = this.voices[selectedVoiceIndex];
-      utterThis.rate = rate; // Adjust speech rate here
-      this.synth.speak(utterThis);
+  private findDefaultVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
+    return voices.find(voice => voice.name === 'Microsoft Zira - English (United States)') || null;
+  }
+
+  speak(text: string, rate: number): void {
+    if (this.voicesLoaded) {
+      const utterThis = new SpeechSynthesisUtterance(text);
+      if (this.defaultVoice) {
+        utterThis.voice = this.defaultVoice;
+        utterThis.rate = rate; // Adjust speech rate here
+        this.synth.speak(utterThis);
+      } else {
+        console.error('Default voice not available.');
+      }
     } else {
-      console.error('Voices not available.');
+      // Queue text to be spoken once voices are loaded
+      this.queuedText = text;
+      this.queuedRate = rate;
     }
   }
 }

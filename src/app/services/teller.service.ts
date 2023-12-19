@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TellerService {
-  private apiUrl = 'http://192.168.100.29:3000';
+  private apiUrl = 'https://queuewise-get-8864d7ddf648.herokuapp.com';
 
   constructor(private http: HttpClient) {}
 
@@ -15,12 +15,22 @@ export class TellerService {
     return this.http.get<any[]>(url);
   }
 
-  getEmphasizedWindows(): Observable<any[]> {
-    const url = `${this.apiUrl}/emphasis-list`;
+  getEmphasizedTellers(): Observable<any[]> {
+    const url = `${this.apiUrl}/listTeller/?emphasis=true`;
     return this.http.get<any[]>(url);
   }
-  getNextQueues(){
+
+  getQueuesByCategory(category?: string): Observable<any[]> {
+    const url = `${this.apiUrl}/queue/${category}`;
+    return this.http.get<any[]>(url);
+  }
+
+  getNextQueues() {
     const url = `${this.apiUrl}/queue`;
     return this.http.get<any[]>(url);
+  }
+
+  getEmphasisList(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/emphasisList`);
   }
 }

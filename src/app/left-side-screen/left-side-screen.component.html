@@ -5,11 +5,12 @@
     </span>
   </div>
   <div class="queue-container">
-    <div class="queues" *ngFor="let process of processes">
-      <div *ngIf="process.tellerType === 'priority' && process.active == true">
+    <div class="queues" *ngFor="let process of processes; let i = index">
+      <div *ngIf="process.tellerType === 'priority' && process.active == true" class="z-index" >
         <app-priority-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
+          [emphasis]="isEmphasized(i)"
         >
         </app-priority-processing-numbers>
       </div>
@@ -17,57 +18,45 @@
         <app-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
+          [emphasis]="isEmphasized(i)"
         ></app-processing-numbers>
       </div>
     </div>
   </div>
 </div>
+
+
 <div
   class="emphasis-overlay"
-  *ngIf="emphasizedQueuesService.emphasizedQueues[0].queueNum != ''"
+  *ngIf="processingService.emphasizedQueues[0]"
 ></div>
-<div
-  *ngIf="emphasizedQueuesService.emphasizedQueues[0].queueNum != ''"
-  class="emphasized-queues"
->
-  <div class="qwise-logo-contain">
-    <img
-      src="assets/images/queuewise-logo.png"
-      alt="queuewise logo"
-      class="qwise-logo"
-    />
-  </div>
+<div *ngIf="processingService.emphasizedQueues[0]" class="emphasized-queues">
   <span class="ticket-num-label">Ticket Number</span>
-  <span class="ticket-box"
-    ><span class="queue-num">
-      {{ emphasizedQueuesService.emphasizedQueues[0].queueNum || "" }}
-    </span>
+  <span class="ticket-box">
+    <span class="queue-num">{{ processingService.emphasizedQueues[0].queue.queueNum }}</span>
     <span class="type-priority">
-      <span>{{ emphasizedQueuesService.emphasizedQueues[0].type }}</span>
+      <span>{{ processingService.emphasizedQueues[0].queue.type }}</span>
       -
-      <span *ngIf="emphasizedQueuesService.emphasizedQueues[0].priority"
-        >Priority</span
-      >
-      <span *ngIf="!emphasizedQueuesService.emphasizedQueues[0].priority"
-        >Regular</span
-      >
+      <span *ngIf="processingService.emphasizedQueues[0].queue.priority">Priority</span>
+      <span *ngIf="!processingService.emphasizedQueues[0].queue.priority">Regular</span>
     </span>
-
     <span class="proceed">Please Proceed to </span>
-    <span class="counter-num"
-      >Counter {{ emphasizedQueuesService.emphasizedQueues[0].windowNum }}</span
-    >
+    <span class="counter-num">Counter {{ processingService.emphasizedQueues[0].queue.windowNum }}</span>
   </span>
-  <span class="org-logo-contain">
-    <img
-      src="assets/images/bplo-logo.png"
-      alt="queuewise logo"
-      class="org-logo"
-    />
-    <img
-      src="assets/images/binan-logo.png"
-      alt="queuewise logo"
-      class="org-logo"
-    />
-  </span>
+  <div class="org-logo-contain">
+<span class="org-logo-contain">
+  <img
+    src="assets/images/bplo-logo.png"
+    alt="queuewise logo"
+    class="org-logo"
+  />
+  <img
+    src="assets/images/binan-logo.png"
+    alt="queuewise logo"
+    class="org-logo"
+  />
+</span>
+  </div>
 </div>
+
+

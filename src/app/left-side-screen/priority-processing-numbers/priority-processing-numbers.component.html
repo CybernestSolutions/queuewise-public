@@ -1,10 +1,10 @@
-<div class="rectangle z-index">
+<div class="rectangle" [ngClass]="{'z-index': emphasis}">
   <div class="odd-shape"></div>
   <div class="window-num">
     <p class="window-num-specific">{{ windowNum }}</p>
   </div>
   <div class="queue-num">
     <p class="queue-num-specific">{{ queueNum }}</p>
-    <p class="priority">PRIORITY</p>
+    <p *ngIf="queueNum" class="priority">PRIORITY</p>
   </div>
 </div>

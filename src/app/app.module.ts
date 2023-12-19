@@ -17,7 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 const config: SocketIoConfig = {
-  url: 'http://192.168.100.29:3000',
+  url: 'https://queuewise-get-8864d7ddf648.herokuapp.com',
   options: {},
 };
 
