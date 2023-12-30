@@ -8,7 +8,11 @@ import { VideoSoundService } from '../services/video-sound.service';
 })
 export class MiddleScreenComponent implements OnInit {
   constructor(private videoSoundService: VideoSoundService) {}
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+    this.play();
+  }
+
   videos: File[] = [];
   videoIndex = 0;
   showOverlay = true;
@@ -33,6 +37,13 @@ export class MiddleScreenComponent implements OnInit {
     if (this.videos.length > 0) {
       const videoPath = URL.createObjectURL(this.videos[this.videoIndex]);
       videoElement.src = videoPath;
+      videoElement.load();
+      videoElement.play();
+      this.showOverlay = false;
+    } else {
+      // If no videos are selected, play a default video
+      const defaultVideoPath = 'assets/videos/1.mp4'; // Change to your default video path
+      videoElement.src = defaultVideoPath;
       videoElement.load();
       videoElement.play();
       this.showOverlay = false;
