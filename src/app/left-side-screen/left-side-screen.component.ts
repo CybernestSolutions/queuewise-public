@@ -5,6 +5,7 @@ import { WebSocketService } from '../services/websocket.service';
 import { TellerService } from '../services/teller.service';
 import { ProcessingService } from '../services/processing.service';
 import { TextToSpeechService } from '../services/tts.service';
+import { VideoSoundService } from '../services/video-sound.service';
 
 @Component({
   selector: 'app-left-side-screen',
@@ -17,14 +18,16 @@ export class LeftSideScreenComponent implements OnInit {
     private webSocketService: WebSocketService,
     private tellerService: TellerService,
     public processingService: ProcessingService,
-    private textToSpeechService: TextToSpeechService
+    private textToSpeechService: TextToSpeechService,
+    private videoSoundService: VideoSoundService
   ) {}
   emphasizedIndex: number = 0;
   counter = COUNTER;
   isPriority = true;
+  speakTextInProgress: boolean = false;
   processes: any;
-  textToSpeak: string = 'Attention please. Please proceed to counter number';
   speechRate: number = 0.7; // Adjust the rate as needed
+  isEmphasisPresent = false;
 
   isEmphasized(index: number): boolean {
     const process = this.processes[index];
@@ -41,26 +44,23 @@ export class LeftSideScreenComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.speakText();
-    }, 5000);
     this.tellerService.getTellersByType('').subscribe((tellers) => {
       this.processes = tellers;
       console.log(this.processes);
     });
 
-    this.getEmphasizedQueues();
     this.setupWebSocket();
+    this.checkEmphasizedQueues(); // Initial call to check emphasized queues
   }
 
-  speakText(): void {
-    this.textToSpeechService.speak(this.textToSpeak, this.speechRate);
-  }
   getEmphasizedQueues(): void {
     this.processingService.getEmphasizedQueues();
     setTimeout(() => {
       if (this.processingService.emphasizedQueues.length > 0) {
         this.getEmphasizedQueues();
+      } else {
+        this.videoSoundService.playVideo();
+        this.isEmphasisPresent = false;
       }
     }, 10000);
   }
@@ -69,8 +69,12 @@ export class LeftSideScreenComponent implements OnInit {
     this.webSocketService.onQueueUpdate().subscribe((data: any) => {
       this.tellerService.getTellersByType('').subscribe((tellers) => {
         this.processes = tellers;
-        this.getEmphasizedQueues();
       });
+    });
+
+    this.webSocketService.ttsUpdate().subscribe((data: any) => {
+      this.getEmphasizedQueues();
+      this.checkEmphasizedQueues();
     });
 
     this.webSocketService.userCapacityUpdate().subscribe((data: any) => {
@@ -78,5 +82,50 @@ export class LeftSideScreenComponent implements OnInit {
         this.processes = tellers;
       });
     });
+  }
+
+  checkEmphasizedQueues(): void {
+    setInterval(() => {
+      if (
+        !this.processingService.emphasizedQueues ||
+        this.processingService.emphasizedQueues.length === 0
+      ) {
+        this.handleNoEmphasis();
+      } else {
+        this.handleEmphasis();
+      }
+    }, 1000);
+  }
+
+  handleEmphasis(): void {
+    if (!this.speakTextInProgress && !this.isEmphasisPresent) {
+      this.speakText();
+      this.videoSoundService.pauseVideo();
+      this.isEmphasisPresent = true;
+    }
+  }
+
+  handleNoEmphasis(): void {
+    if (this.isEmphasisPresent) {
+      this.videoSoundService.playVideo();
+      this.isEmphasisPresent = false;
+    }
+  }
+
+  speakText(): void {
+    this.speakTextInProgress = true;
+
+    const emphasizedQueue = this.processingService.emphasizedQueues[0];
+    const counterNum = emphasizedQueue?.tellerNum;
+    const queueNum = emphasizedQueue?.queue?.queueNum;
+
+    if (counterNum && queueNum) {
+      const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}`;
+      this.textToSpeechService.speak(textToSpeak, this.speechRate);
+    }
+
+    setTimeout(() => {
+      this.speakTextInProgress = false;
+    }, 10000); // Adjust this timeout as needed
   }
 }

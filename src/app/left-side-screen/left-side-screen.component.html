@@ -6,7 +6,10 @@
   </div>
   <div class="queue-container">
     <div class="queues" *ngFor="let process of processes; let i = index">
-      <div *ngIf="process.tellerType === 'priority' && process.active == true" class="z-index" >
+      <div
+        *ngIf="process.tellerType === 'priority' && process.active == true"
+        class="z-index"
+      >
         <app-priority-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
@@ -25,7 +28,6 @@
   </div>
 </div>
 
-
 <div
   class="emphasis-overlay"
   *ngIf="processingService.emphasizedQueues[0]"
@@ -33,30 +35,36 @@
 <div *ngIf="processingService.emphasizedQueues[0]" class="emphasized-queues">
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box">
-    <span class="queue-num">{{ processingService.emphasizedQueues[0].queue.queueNum }}</span>
+    <span class="queue-num">{{
+      processingService.emphasizedQueues[0].queue.queueNum
+    }}</span>
     <span class="type-priority">
       <span>{{ processingService.emphasizedQueues[0].queue.type }}</span>
       -
-      <span *ngIf="processingService.emphasizedQueues[0].queue.priority">Priority</span>
-      <span *ngIf="!processingService.emphasizedQueues[0].queue.priority">Regular</span>
+      <span *ngIf="processingService.emphasizedQueues[0].queue.priority"
+        >Priority</span
+      >
+      <span *ngIf="!processingService.emphasizedQueues[0].queue.priority"
+        >Regular</span
+      >
     </span>
     <span class="proceed">Please Proceed to </span>
-    <span class="counter-num">Counter {{ processingService.emphasizedQueues[0].queue.windowNum }}</span>
+    <span class="counter-num"
+      >Counter {{ processingService.emphasizedQueues[0].tellerNum }}</span
+    >
   </span>
   <div class="org-logo-contain">
-<span class="org-logo-contain">
-  <img
-    src="assets/images/bplo-logo.png"
-    alt="queuewise logo"
-    class="org-logo"
-  />
-  <img
-    src="assets/images/binan-logo.png"
-    alt="queuewise logo"
-    class="org-logo"
-  />
-</span>
+    <span class="org-logo-contain">
+      <img
+        src="assets/images/bplo-logo.png"
+        alt="queuewise logo"
+        class="org-logo"
+      />
+      <img
+        src="assets/images/binan-logo.png"
+        alt="queuewise logo"
+        class="org-logo"
+      />
+    </span>
   </div>
 </div>
-
-

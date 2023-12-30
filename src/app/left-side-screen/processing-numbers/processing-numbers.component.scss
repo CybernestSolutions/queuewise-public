@@ -1,12 +1,12 @@
 .rectangle {
-  margin: 7px 0 7px 0;
+  margin: 6px 0 6px 0;
   position: relative;
   flex-direction: row;
   background-color: var(--color-dark-blue);
   padding: 7px;
   width: 360px;
   border-radius: 15px;
-  height: 75px;
+  height: 65px;
   display: flex;
   box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.8);
   color: var(--color-white);
@@ -18,14 +18,13 @@
     letter-spacing: -3px;
     width: 50px;
     font-weight: var(--weight-bolder);
-    padding-top: -1px;
     font-size: 50px;
     position: absolute;
     align-self: center;
   }
 
   .odd-shape {
-    border-top: 60px solid var(--color-light-blue);
+    border-top: 50px solid var(--color-light-blue);
     border-right: 35px solid transparent;
     width: 100px;
     border-bottom-left-radius: 10px;

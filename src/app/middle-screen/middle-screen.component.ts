@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { VideoSoundService } from '../services/video-sound.service';
 
 @Component({
   selector: 'app-middle-screen',
   templateUrl: './middle-screen.component.html',
   styleUrls: ['./middle-screen.component.scss'],
 })
-export class MiddleScreenComponent {
+export class MiddleScreenComponent implements OnInit {
+  constructor(private videoSoundService: VideoSoundService) {}
+  ngOnInit(): void {}
   videos: File[] = [];
   videoIndex = 0;
   showOverlay = true;
@@ -25,6 +28,7 @@ export class MiddleScreenComponent {
 
   play() {
     const videoElement = document.getElementById('video') as HTMLVideoElement;
+    this.videoSoundService.setVideoElement(videoElement);
 
     if (this.videos.length > 0) {
       const videoPath = URL.createObjectURL(this.videos[this.videoIndex]);

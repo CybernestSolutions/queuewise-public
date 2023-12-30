@@ -25,4 +25,8 @@ export class WebSocketService {
   public emphasisUpdate(){
     return this.socket.fromEvent('emphasisUpdate');
   }
+
+  public ttsUpdate(){
+    return this.socket.fromEvent('queueTts');
+  }
 }

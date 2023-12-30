@@ -9,7 +9,14 @@ export class ProcessingService {
   processes: any[] = [];
   nextQueues: any[] = [{ queueNum: '', priority: null }];
   emphasizedQueues: any = [
-
+    {
+      queue: {
+        queueNum: '',
+        priority: null,
+      },
+      tellerNum: '',
+      windowNum: '',
+    },
   ];
 
   getTellers() {
