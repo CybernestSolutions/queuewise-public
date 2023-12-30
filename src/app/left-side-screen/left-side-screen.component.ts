@@ -48,7 +48,7 @@ export class LeftSideScreenComponent implements OnInit {
       this.processes = tellers;
       console.log(this.processes);
     });
-
+    this.getEmphasizedQueues();
     this.setupWebSocket();
     this.checkEmphasizedQueues(); // Initial call to check emphasized queues
   }
@@ -83,36 +83,20 @@ export class LeftSideScreenComponent implements OnInit {
       });
     });
   }
-
   checkEmphasizedQueues(): void {
     setInterval(() => {
-      if (
-        !this.processingService.emphasizedQueues ||
-        this.processingService.emphasizedQueues.length === 0
-      ) {
+      const hasEmphasizedQueue =
+        this.processingService.emphasizedQueues.length > 0;
+
+      if (!hasEmphasizedQueue && this.isEmphasisPresent) {
         this.handleNoEmphasis();
-      } else {
+      } else if (hasEmphasizedQueue && !this.speakTextInProgress) {
         this.handleEmphasis();
       }
     }, 1000);
   }
 
   handleEmphasis(): void {
-    if (!this.speakTextInProgress && !this.isEmphasisPresent) {
-      this.speakText();
-      this.videoSoundService.pauseVideo();
-      this.isEmphasisPresent = true;
-    }
-  }
-
-  handleNoEmphasis(): void {
-    if (this.isEmphasisPresent) {
-      this.videoSoundService.playVideo();
-      this.isEmphasisPresent = false;
-    }
-  }
-
-  speakText(): void {
     this.speakTextInProgress = true;
 
     const emphasizedQueue = this.processingService.emphasizedQueues[0];
@@ -122,10 +106,22 @@ export class LeftSideScreenComponent implements OnInit {
     if (counterNum && queueNum) {
       const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}`;
       this.textToSpeechService.speak(textToSpeak, this.speechRate);
-    }
 
-    setTimeout(() => {
-      this.speakTextInProgress = false;
-    }, 10000); // Adjust this timeout as needed
+      // Pause video when emphasis occurs
+      this.videoSoundService.pauseVideo();
+      this.isEmphasisPresent = true;
+
+      // Reset the flag after speaking
+      setTimeout(() => {
+        this.speakTextInProgress = false;
+        this.videoSoundService.playVideo(); // Play video after TTS completes
+        this.isEmphasisPresent = false;
+      }, 10000); // Adjust this timeout as needed
+    }
+  }
+
+  handleNoEmphasis(): void {
+    this.videoSoundService.playVideo();
+    this.isEmphasisPresent = false;
   }
 }
