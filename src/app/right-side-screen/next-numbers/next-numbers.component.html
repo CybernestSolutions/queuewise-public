@@ -2,7 +2,7 @@
   class="next-num-container"
   *ngIf="processingData.nextQueues[0].queueNum != ''"
 >
-  <div *ngFor="let nextNumber of processingData.nextQueues | slice:0:8">
+  <div *ngFor="let nextNumber of processingData.nextQueues | slice:0:7">
     <div class="container">
       <div class="inner" [class.inner-custom]="nextNumber.priority == true">
         <p>

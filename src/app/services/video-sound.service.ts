@@ -21,4 +21,10 @@ export class VideoSoundService {
       this.videoElement.play();
     }
   }
+
+  setVolume(volume: number): void {
+    if (this.videoElement) {
+      this.videoElement.volume = volume;
+    }
+  }
 }

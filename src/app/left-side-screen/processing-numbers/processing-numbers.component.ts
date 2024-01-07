@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ProcessingService } from 'src/app/services/processing.service';
 
 @Component({
   selector: 'app-processing-numbers',
@@ -10,4 +11,9 @@ export class ProcessingNumbersComponent {
   @Input() queueNum: string | undefined;
   @Input() status: string | undefined;
   @Input() emphasis: boolean | undefined;
+
+  constructor(
+  public processingService: ProcessingService ,
+  ) {
+  }
 }

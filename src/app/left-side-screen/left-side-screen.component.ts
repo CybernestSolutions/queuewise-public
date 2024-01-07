@@ -32,11 +32,12 @@ export class LeftSideScreenComponent implements OnInit {
   isEmphasized(index: number): boolean {
     const process = this.processes[index];
     const emphasizedQueue = this.processingService.emphasizedQueues[0];
+    const isEmphasized = this.processingService.showEmphasisOverlay;
 
     if (
       process &&
       emphasizedQueue &&
-      process.tellerNum === emphasizedQueue.tellerNum
+      process.tellerNum === emphasizedQueue.tellerNum && isEmphasized
     ) {
       return true;
     }
@@ -51,9 +52,7 @@ export class LeftSideScreenComponent implements OnInit {
       this.processes = tellers;
       console.log(this.processes);
     });
-    this.getEmphasizedQueues();
     this.setupWebSocket();
-    this.checkEmphasizedQueues(); // Initial call to check emphasized queues
   }
   greetings() {
     this.textToSpeechService.speak(
@@ -63,6 +62,7 @@ export class LeftSideScreenComponent implements OnInit {
   }
   getEmphasizedQueues(): void {
     this.processingService.getEmphasizedQueues();
+    this.processingService.showEmphasisOverlay = true;
     setTimeout(() => {
       if (this.processingService.emphasizedQueues.length > 0) {
         this.getEmphasizedQueues();
@@ -113,7 +113,7 @@ export class LeftSideScreenComponent implements OnInit {
     console.log(emphasizedQueue);
 
     if (counterNum && queueNum) {
-      const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}`;
+      const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}. `;
       this.textToSpeechService.speak(textToSpeak, this.speechRate);
 
       // Pause video when emphasis occurs
@@ -125,12 +125,13 @@ export class LeftSideScreenComponent implements OnInit {
         this.speakTextInProgress = false;
         this.videoSoundService.playVideo(); // Play video after TTS completes
         this.isEmphasisPresent = false;
-      }, 15000); // Adjust this timeout as needed
+      }, 10000); // Adjust this timeout as needed
     }
   }
 
   handleNoEmphasis(): void {
     this.videoSoundService.playVideo();
     this.isEmphasisPresent = false;
+    this.processingService.showEmphasisOverlay = false;
   }
 }

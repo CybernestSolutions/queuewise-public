@@ -30,9 +30,12 @@
 
 <div
   class="emphasis-overlay"
-  *ngIf="processingService.emphasizedQueues[0]"
+  *ngIf="processingService.showEmphasisOverlay == true"
 ></div>
-<div *ngIf="processingService.emphasizedQueues[0]" class="emphasized-queues">
+<div
+  *ngIf="processingService.showEmphasisOverlay == true"
+  class="emphasized-queues"
+>
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box">
     <span class="queue-num">{{

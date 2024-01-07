@@ -8,10 +8,11 @@ export class ProcessingService {
   constructor(private tellerService: TellerService) {}
   processes: any[] = [];
   nextQueues: any[] = [{ queueNum: '', priority: null }];
+  showEmphasisOverlay: boolean = false;
   emphasizedQueues: any = [
     {
       queue: {
-        queueNum: '',
+        queueNum: "initial",
         priority: null,
       },
       tellerNum: '',

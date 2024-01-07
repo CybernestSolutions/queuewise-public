@@ -33,7 +33,7 @@ export class MiddleScreenComponent implements OnInit {
   play() {
     const videoElement = document.getElementById('video') as HTMLVideoElement;
     this.videoSoundService.setVideoElement(videoElement);
-
+    this.videoSoundService.setVolume(0.5);
     if (this.videos.length > 0) {
       const videoPath = URL.createObjectURL(this.videos[this.videoIndex]);
       videoElement.src = videoPath;
@@ -46,6 +46,7 @@ export class MiddleScreenComponent implements OnInit {
       videoElement.src = defaultVideoPath;
       videoElement.load();
       videoElement.play();
+      videoElement.loop = true; // Loop the default video
       this.showOverlay = false;
     }
   }
