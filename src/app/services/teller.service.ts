@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../utilities/const/api-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TellerService {
-  private apiUrl = 'https://queuewise-get-8864d7ddf648.herokuapp.com';
+  private apiUrl = API_URL;
 
   constructor(private http: HttpClient) {}
 
