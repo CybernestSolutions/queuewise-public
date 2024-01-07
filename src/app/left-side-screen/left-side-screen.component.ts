@@ -44,6 +44,9 @@ export class LeftSideScreenComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.greetings();
+    }, 3000);
     this.tellerService.getTellersByType('').subscribe((tellers) => {
       this.processes = tellers;
       console.log(this.processes);
@@ -52,7 +55,12 @@ export class LeftSideScreenComponent implements OnInit {
     this.setupWebSocket();
     this.checkEmphasizedQueues(); // Initial call to check emphasized queues
   }
-
+  greetings() {
+    this.textToSpeechService.speak(
+      'Welcome to Business Permit Licensing Office!',
+      1
+    );
+  }
   getEmphasizedQueues(): void {
     this.processingService.getEmphasizedQueues();
     setTimeout(() => {
@@ -102,6 +110,7 @@ export class LeftSideScreenComponent implements OnInit {
     const emphasizedQueue = this.processingService.emphasizedQueues[0];
     const counterNum = emphasizedQueue?.tellerNum;
     const queueNum = emphasizedQueue?.queue?.queueNum;
+    console.log(emphasizedQueue);
 
     if (counterNum && queueNum) {
       const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}`;
@@ -116,7 +125,7 @@ export class LeftSideScreenComponent implements OnInit {
         this.speakTextInProgress = false;
         this.videoSoundService.playVideo(); // Play video after TTS completes
         this.isEmphasisPresent = false;
-      }, 10000); // Adjust this timeout as needed
+      }, 15000); // Adjust this timeout as needed
     }
   }
 
