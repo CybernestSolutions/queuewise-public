@@ -70,7 +70,7 @@ export class LeftSideScreenComponent implements OnInit {
         this.videoSoundService.playVideo();
         this.isEmphasisPresent = false;
       }
-    }, 10000);
+    }, 5000);
   }
 
   private setupWebSocket(): void {
@@ -125,7 +125,7 @@ export class LeftSideScreenComponent implements OnInit {
         this.speakTextInProgress = false;
         this.videoSoundService.playVideo(); // Play video after TTS completes
         this.isEmphasisPresent = false;
-      }, 10000); // Adjust this timeout as needed
+      }, 15000); // Adjust this timeout as needed
     }
   }
 

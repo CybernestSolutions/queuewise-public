@@ -30,30 +30,30 @@
 
 <div
   class="emphasis-overlay"
-  *ngIf="processingService.showEmphasisOverlay == true"
+  *ngIf="processingService.emphasizedQueues[0]?.queue"
 ></div>
 <div
-  *ngIf="processingService.showEmphasisOverlay == true"
+*ngIf="processingService.emphasizedQueues[0]?.queue"
   class="emphasized-queues"
 >
   <span class="ticket-num-label">Ticket Number</span>
   <span class="ticket-box">
     <span class="queue-num">{{
-      processingService.emphasizedQueues[0].queue.queueNum
+      processingService.emphasizedQueues[0]?.queue.queueNum
     }}</span>
     <span class="type-priority">
-      <span>{{ processingService.emphasizedQueues[0].queue.type }}</span>
+      <span>{{ processingService.emphasizedQueues[0]?.queue.type }}</span>
       -
-      <span *ngIf="processingService.emphasizedQueues[0].queue.priority"
+      <span *ngIf="processingService.emphasizedQueues[0]?.queue.priority"
         >Priority</span
       >
-      <span *ngIf="!processingService.emphasizedQueues[0].queue.priority"
+      <span *ngIf="!processingService.emphasizedQueues[0]?.queue.priority"
         >Regular</span
       >
     </span>
     <span class="proceed">Please Proceed to </span>
     <span class="counter-num"
-      >Counter {{ processingService.emphasizedQueues[0].tellerNum }}</span
+      >Counter {{ processingService.emphasizedQueues[0]?.tellerNum }}</span
     >
   </span>
   <div class="org-logo-contain">

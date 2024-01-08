@@ -10,14 +10,14 @@ export class ProcessingService {
   nextQueues: any[] = [{ queueNum: '', priority: null }];
   showEmphasisOverlay: boolean = false;
   emphasizedQueues: any = [
-    {
-      queue: {
-        queueNum: "initial",
-        priority: null,
-      },
-      tellerNum: '',
-      windowNum: '',
-    },
+    // {
+    //   queue: {
+    //     queueNum: "initial",
+    //     priority: null,
+    //   },
+    //   tellerNum: '',
+    //   windowNum: '',
+    // },
   ];
 
   getTellers() {
