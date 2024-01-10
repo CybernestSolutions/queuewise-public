@@ -1,8 +1,22 @@
 <div class="queueing-numbers">
-  <div class="counter">
+  <div class="counter" [ngClass]="{'priority-z-index': processingService.emphasizedQueues[0]?.queue.priority==true}">
     <span>
       {{ counter }}
     </span>
+  </div>
+  <div class="queue-container">
+    <div class="queues" *ngFor="let process of processes; let i = index">
+      <div *ngIf="process.tellerType == 'regular' && process.active == true">
+        <app-processing-numbers
+          [windowNum]="process.tellerNum"
+          [queueNum]="process.queue?.queueNum"
+          [emphasis]="isEmphasized(i)"
+        ></app-processing-numbers>
+      </div>
+    </div>
+  </div>
+  <div class="counter counter-priority" [ngClass]="{'priority-z-index': processingService.emphasizedQueues[0]?.queue.priority==false}">
+    <span> PRIORITY </span>
   </div>
   <div class="queue-container">
     <div class="queues" *ngFor="let process of processes; let i = index">
@@ -17,13 +31,6 @@
         >
         </app-priority-processing-numbers>
       </div>
-      <div *ngIf="process.tellerType == 'regular' && process.active == true">
-        <app-processing-numbers
-          [windowNum]="process.tellerNum"
-          [queueNum]="process.queue?.queueNum"
-          [emphasis]="isEmphasized(i)"
-        ></app-processing-numbers>
-      </div>
     </div>
   </div>
 </div>
@@ -33,7 +40,7 @@
   *ngIf="processingService.emphasizedQueues[0]?.queue"
 ></div>
 <div
-*ngIf="processingService.emphasizedQueues[0]?.queue"
+  *ngIf="processingService.emphasizedQueues[0]?.queue"
   class="emphasized-queues"
 >
   <span class="ticket-num-label">Ticket Number</span>

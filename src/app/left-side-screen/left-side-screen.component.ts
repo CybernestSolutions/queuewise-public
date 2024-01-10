@@ -37,7 +37,8 @@ export class LeftSideScreenComponent implements OnInit {
     if (
       process &&
       emphasizedQueue &&
-      process.tellerNum === emphasizedQueue.tellerNum && isEmphasized
+      process.tellerNum === emphasizedQueue.tellerNum &&
+      isEmphasized
     ) {
       return true;
     }
@@ -110,10 +111,11 @@ export class LeftSideScreenComponent implements OnInit {
     const emphasizedQueue = this.processingService.emphasizedQueues[0];
     const counterNum = emphasizedQueue?.tellerNum;
     const queueNum = emphasizedQueue?.queue?.queueNum;
+    const queueType = emphasizedQueue?.queue?.type;
     console.log(emphasizedQueue);
 
     if (counterNum && queueNum) {
-      const textToSpeak = `Attention, queue number ${queueNum}, Please Proceed to counter number ${counterNum}. `;
+      const textToSpeak = `Attention, ${queueType} number ${queueNum}, Please Proceed to counter number ${counterNum}. Number ${queueNum}, Counter ${counterNum}`;
       this.textToSpeechService.speak(textToSpeak, this.speechRate);
 
       // Pause video when emphasis occurs
@@ -125,7 +127,7 @@ export class LeftSideScreenComponent implements OnInit {
         this.speakTextInProgress = false;
         this.videoSoundService.playVideo(); // Play video after TTS completes
         this.isEmphasisPresent = false;
-      }, 15000); // Adjust this timeout as needed
+      }, 13000); // Adjust this timeout as needed
     }
   }
 

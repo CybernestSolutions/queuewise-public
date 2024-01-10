@@ -1,6 +1,6 @@
 .next-num-container {
-  height: 680px;
-  overflow: hidden;
+
+  height: fit-content;
 
   .container {
     width: 100%;
@@ -8,46 +8,29 @@
     height: 80px;
     border-radius: 10px;
     border: 1.5px solid var(--color-dark-blue);
-    display: grid;
     color: var(--color-dark-blue);
-    padding-right: 10px;
+    padding: 10px;
     grid-template-rows: 1fr 1fr;
     margin: 8px 0px 8px 0px;
     box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.7);
 
 
     .inner {
-      grid-row: 1/2;
-      text-align: right;
-      margin-top: -9px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
 
-      p {
-        font-size: 55px;
-        line-height: 0;
+      .left {
         font-weight: bold;
+        font-size: 25px;
+        margin-bottom: 10px;
+      }
 
-        .left {
-          font-weight: bold;
-          font-size: 15px;
-        }
+      .ticket-num {
+        font-size: 60px;
+        font-weight: bold;
       }
     }
 
-    .inner-custom {
-      margin-top: -15px;
-    }
-
-    .priority {
-      grid-row: 2/3;
-      text-align: right;
-      font-size: 18px;
-      font-weight: bold;
-
-      .prio {
-        line-height: 0;
-        margin-top: -40px;
-        font-size: 15px;
-      }
-    }
   }
 }

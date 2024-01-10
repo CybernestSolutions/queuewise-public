@@ -136,15 +136,18 @@
   background-color: var(--color-black);
   grid-column: 2 / 3;
   grid-row: 2;
+  margin-top: 10px;
 }
 
 .contain:nth-of-type(4) {
   grid-column: 3 / 3;
   grid-row: 2/4;
-  margin-right: 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .contain:nth-of-type(5) {
   grid-column: 2 / 3;
   grid-row: 3/4;
+  margin-bottom: 10px;
 }
