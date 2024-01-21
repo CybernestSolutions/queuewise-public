@@ -9,5 +9,9 @@ import { ProcessingService } from './services/processing.service';
 export class AppComponent implements OnInit {
   title = 'queuewise-public-view';
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    setInterval(() => {
+      window.location.reload();
+    }, 3600000); // 1 hour = 3600000 milliseconds
+  }
 }
