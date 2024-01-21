@@ -1,6 +1,6 @@
 <section
   class="next-num-container"
-  *ngIf="processingData.nextQueues[0].queueNum != ''"
+  *ngIf="processingData.nextQueues[0]?.queueNum != ''"
 >
   <div *ngFor="let nextNumber of processingData.nextQueues | slice : 0 : 7">
     <div class="container">

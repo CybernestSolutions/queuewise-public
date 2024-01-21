@@ -33,7 +33,7 @@ export class MiddleScreenComponent implements OnInit {
   play() {
     const videoElement = document.getElementById('video') as HTMLVideoElement;
     this.videoSoundService.setVideoElement(videoElement);
-    this.videoSoundService.setVolume(0.5);
+    this.videoSoundService.setVolume(0.25);
     if (this.videos.length > 0) {
       const videoPath = URL.createObjectURL(this.videos[this.videoIndex]);
       videoElement.src = videoPath;

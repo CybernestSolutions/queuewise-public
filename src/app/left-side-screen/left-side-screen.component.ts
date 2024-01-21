@@ -127,7 +127,7 @@ export class LeftSideScreenComponent implements OnInit {
         this.speakTextInProgress = false;
         this.videoSoundService.playVideo(); // Play video after TTS completes
         this.isEmphasisPresent = false;
-      }, 13000); // Adjust this timeout as needed
+      }, 15000); // Adjust this timeout as needed
     }
   }
 

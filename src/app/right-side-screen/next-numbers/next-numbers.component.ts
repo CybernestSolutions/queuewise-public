@@ -11,9 +11,7 @@ import { TICKET_NUMBER } from 'src/app/utilities/const/right-side-screen';
 export class NextNumbersComponent implements OnInit {
   ticketNumberString = TICKET_NUMBER;
   priorityString = 'PRIORITY';
-  nextQueues: any[] = [
-    { queueNumber: '', priority: null },
-  ];
+  nextQueues: any[] = [];
 
   constructor(
     public processingData: ProcessingService,

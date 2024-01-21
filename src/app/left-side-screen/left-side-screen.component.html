@@ -49,7 +49,7 @@
       processingService.emphasizedQueues[0]?.queue.queueNum
     }}</span>
     <span class="type-priority">
-      <span>{{ processingService.emphasizedQueues[0]?.queue.type }}</span>
+      <span>{{ processingService.emphasizedQueues[0]?.queue.type | titlecase }}</span>
       -
       <span *ngIf="processingService.emphasizedQueues[0]?.queue.priority"
         >Priority</span

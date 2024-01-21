@@ -1,6 +1,6 @@
 {
   "name": "queuewise-public-view",
-  "version": "1.8.24",
+  "version": "1.22.24",
   "description": "An app for BPLO to display the queue number of the clients",
   "author": {
     "name": "ApexTech Innovation",
