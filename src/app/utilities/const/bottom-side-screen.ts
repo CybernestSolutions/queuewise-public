@@ -1,5 +1,4 @@
-export const GREETINGS =
-  'Mabuhay Biñanense! Experience the City of Life!';
+export const GREETINGS ='Lorem Ipsum! Lorem Impsum Dolor !';
 export const QUEUE_STAT_DASHBOARD = 'QUEUE STATUS DASHBOARD';
 export const NEW = 'NEW';
 export const RENEWAL = 'RENEWAL';
