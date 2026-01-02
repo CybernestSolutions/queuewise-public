@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TellerService } from './teller.service';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,14 +32,14 @@ export class ProcessingService {
     });
   }
 
-  getEmphasizedQueues() {
-    this.tellerService.getEmphasizedTellers().subscribe((queues) => {
-      this.emphasizedQueues = queues;
-      console.log(this.emphasizedQueues);
-
-    });
+  getEmphasizedQueues(): Observable<any[]> {
+    return this.tellerService.getEmphasizedTellers().pipe(
+      tap((queues: any[]) => {
+        this.emphasizedQueues = queues || [];
+        console.log('emphasizedQueues:', this.emphasizedQueues);
+      })
+    );
   }
-
 
   getNextQueues() {
     this.tellerService.getNextQueues().subscribe((queues) => {
