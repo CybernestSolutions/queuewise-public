@@ -7,6 +7,7 @@
 /bazel-out
 /out
 /src/assets/videos
+/release
 
 # Node
 /node_modules
