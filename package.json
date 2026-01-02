@@ -1,10 +1,10 @@
 {
   "name": "queuewise-public-view",
-  "version": "25.1.1",
+  "version": "26.1.6",
   "description": "An app for BPLO to display the queue number of the clients",
   "author": {
-    "name": "ApexTech Innovation",
-    "email": "apex.innovation@tech.com"
+    "name": "Cybernest Solutions",
+    "email": "cns@cybernestsolution.com"
   },
   "main": "main.js",
   "license": "MIT",
@@ -15,8 +15,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "electron .",
-    "electron-build": "electron-builder",
-    "package": "electron-packager . queuewise-public-view --platform=win32 --arch=x64 --out=dist --no-prune --ignore=/node_modules --ignore=/e2e --ignore=/src --overwrite --icon=/src/assets/icon-glow.ico"
+    "electron-build": "electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +28,8 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "dexie": "^4.0.10",
-    "electron-packager": "^17.1.2",
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.6.2",
     "ngx-socket-io": "^4.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -52,11 +52,25 @@
   },
   "build": {
     "asar": true,
-    "appId": "com.example.queuewise-public-view",
+    "appId": "com.queuewise.publicview",
     "productName": "Queuewise Public View",
     "directories": {
       "output": "dist"
     },
+    "files": [
+      "**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/.bin",
+      "!src",
+      "!e2e"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "CybernestSolutions",
+        "repo": "queuewise-public"
+      }
+    ],
     "win": {
       "target": "nsis",
       "icon": "src/assets/icon-glow.ico"

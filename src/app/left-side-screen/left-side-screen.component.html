@@ -1,5 +1,11 @@
 <div class="queueing-numbers">
-  <div class="counter" [ngClass]="{'priority-z-index': processingService.emphasizedQueues[0]?.queue.priority==true}">
+  <div
+    class="counter"
+    [ngClass]="{
+      'priority-z-index':
+        processingService.emphasizedQueues[0]?.queue.priority == true
+    }"
+  >
     <span>
       {{ counter }}
     </span>
@@ -15,7 +21,13 @@
       </div>
     </div>
   </div>
-  <div class="counter counter-priority" [ngClass]="{'priority-z-index': processingService.emphasizedQueues[0]?.queue.priority==false}">
+  <div
+    class="counter counter-priority"
+    [ngClass]="{
+      'priority-z-index':
+        processingService.emphasizedQueues[0]?.queue.priority == false
+    }"
+  >
     <span> PRIORITY </span>
   </div>
   <div class="queue-container">
@@ -49,7 +61,9 @@
       processingService.emphasizedQueues[0]?.queue.queueNum
     }}</span>
     <span class="type-priority">
-      <span>{{ processingService.emphasizedQueues[0]?.queue.type | titlecase }}</span>
+      <span>{{
+        processingService.emphasizedQueues[0]?.queue.type | titlecase
+      }}</span>
       -
       <span *ngIf="processingService.emphasizedQueues[0]?.queue.priority"
         >Priority</span
@@ -65,6 +79,11 @@
   </span>
   <div class="org-logo-contain">
     <span class="org-logo-contain">
+      <img
+        src="assets/images/queuewise-logo2.png"
+        alt="queuewise logo"
+        class="org-logo"
+      />
       <img
         src="assets/images/bplo-logo.png"
         alt="queuewise logo"
