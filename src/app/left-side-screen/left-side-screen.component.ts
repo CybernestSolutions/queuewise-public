@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { COUNTER } from '../utilities/const/main';
 import { EmphasizedQueuesService } from '../services/emphasized-queues.service';
 import { WebSocketService } from '../services/websocket.service';
@@ -6,13 +6,14 @@ import { TellerService } from '../services/teller.service';
 import { ProcessingService } from '../services/processing.service';
 import { TextToSpeechService } from '../services/tts.service';
 import { VideoSoundService } from '../services/video-sound.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-left-side-screen',
   templateUrl: './left-side-screen.component.html',
   styleUrls: ['./left-side-screen.component.scss'],
 })
-export class LeftSideScreenComponent implements OnInit {
+export class LeftSideScreenComponent implements OnInit, OnDestroy {
   constructor(
     public emphasizedQueuesService: EmphasizedQueuesService,
     private webSocketService: WebSocketService,
@@ -21,119 +22,135 @@ export class LeftSideScreenComponent implements OnInit {
     private textToSpeechService: TextToSpeechService,
     private videoSoundService: VideoSoundService
   ) {}
-  emphasizedIndex: number = 0;
+
   counter = COUNTER;
-  isPriority = true;
-  speakTextInProgress: boolean = false;
   processes: any;
-  speechRate: number = 0.7; // Adjust the rate as needed
-  isEmphasisPresent = false;
+
+  speechRate: number = 0.7;
+  speakTextInProgress = false;
+
+  // prevents repeating the same announcement forever
+  private lastAnnouncementKey: string | null = null;
+
+  private subs = new Subscription();
 
   isEmphasized(index: number): boolean {
-    const process = this.processes[index];
-    const emphasizedQueue = this.processingService.emphasizedQueues[0];
-    const isEmphasized = this.processingService.showEmphasisOverlay;
+    const process = this.processes?.[index];
+    const emphasizedQueue = this.processingService.emphasizedQueues?.[0];
+    const isOverlay = this.processingService.showEmphasisOverlay;
 
-    if (
+    return !!(
       process &&
       emphasizedQueue &&
       process.tellerNum === emphasizedQueue.tellerNum &&
-      isEmphasized
-    ) {
-      return true;
-    }
-    return false;
+      isOverlay
+    );
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.greetings();
-    }, 3000);
+    setTimeout(() => this.greetings(), 3000);
+
     this.tellerService.getTellersByType('').subscribe((tellers) => {
       this.processes = tellers;
-      console.log(this.processes);
     });
+
+    this.bindTtsLifecycleToUi();
     this.setupWebSocket();
   }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   greetings() {
     this.textToSpeechService.speak(
       'Welcome to Business Permit Licensing Office!',
       1
     );
   }
-  getEmphasizedQueues(): void {
-    this.processingService.getEmphasizedQueues();
-    this.processingService.showEmphasisOverlay = true;
-    setTimeout(() => {
-      if (this.processingService.emphasizedQueues.length > 0) {
-        this.getEmphasizedQueues();
-      } else {
+
+  private bindTtsLifecycleToUi(): void {
+    this.subs.add(
+      this.textToSpeechService.onStart$.subscribe(() => {
+        this.speakTextInProgress = true;
+        this.processingService.showEmphasisOverlay = true;
+        this.videoSoundService.pauseVideo();
+      })
+    );
+
+    this.subs.add(
+      this.textToSpeechService.onEnd$.subscribe(() => {
+        this.speakTextInProgress = false;
+        this.processingService.showEmphasisOverlay = false;
         this.videoSoundService.playVideo();
-        this.isEmphasisPresent = false;
-      }
-    }, 5000);
+
+        // After speaking, refresh and speak next if needed
+        this.refreshAndAnnounceIfNeeded();
+      })
+    );
+
+    this.subs.add(
+      this.textToSpeechService.onError$.subscribe(() => {
+        this.speakTextInProgress = false;
+        this.processingService.showEmphasisOverlay = false;
+        this.videoSoundService.playVideo();
+      })
+    );
   }
 
   private setupWebSocket(): void {
-    this.webSocketService.onQueueUpdate().subscribe((data: any) => {
-      this.tellerService.getTellersByType('').subscribe((tellers) => {
-        this.processes = tellers;
-      });
-    });
+    this.subs.add(
+      this.webSocketService.onQueueUpdate().subscribe(() => {
+        this.tellerService.getTellersByType('').subscribe((tellers) => {
+          this.processes = tellers;
+        });
+      })
+    );
 
-    this.webSocketService.ttsUpdate().subscribe((data: any) => {
-      this.getEmphasizedQueues();
-      this.checkEmphasizedQueues();
-    });
+    // Main trigger for TTS emphasis
+    this.subs.add(
+      this.webSocketService.ttsUpdate().subscribe(() => {
+        this.refreshAndAnnounceIfNeeded(true);
+      })
+    );
 
-    this.webSocketService.userCapacityUpdate().subscribe((data: any) => {
-      this.tellerService.getTellersByType('').subscribe((tellers) => {
-        this.processes = tellers;
-      });
-    });
-  }
-  checkEmphasizedQueues(): void {
-    setInterval(() => {
-      const hasEmphasizedQueue =
-        this.processingService.emphasizedQueues.length > 0;
-
-      if (!hasEmphasizedQueue && this.isEmphasisPresent) {
-        this.handleNoEmphasis();
-      } else if (hasEmphasizedQueue && !this.speakTextInProgress) {
-        this.handleEmphasis();
-      }
-    }, 1000);
+    this.subs.add(
+      this.webSocketService.userCapacityUpdate().subscribe(() => {
+        this.tellerService.getTellersByType('').subscribe((tellers) => {
+          this.processes = tellers;
+        });
+      })
+    );
   }
 
-  handleEmphasis(): void {
-    this.speakTextInProgress = true;
+  private refreshAndAnnounceIfNeeded(force: boolean = false): void {
+    if (this.speakTextInProgress) return;
 
-    const emphasizedQueue = this.processingService.emphasizedQueues[0];
-    const counterNum = emphasizedQueue?.tellerNum;
-    const queueNum = emphasizedQueue?.queue?.queueNum;
-    const queueType = emphasizedQueue?.queue?.type;
-    console.log(emphasizedQueue);
-
-    if (counterNum && queueNum) {
-      const textToSpeak = `Attention, ${queueType} number ${queueNum}, Please Proceed to counter number ${counterNum}. Number ${queueNum}, Counter ${counterNum}`;
-      this.textToSpeechService.speak(textToSpeak, this.speechRate);
-
-      // Pause video when emphasis occurs
-      this.videoSoundService.pauseVideo();
-      this.isEmphasisPresent = true;
-
-      // Reset the flag after speaking
-      setTimeout(() => {
-        this.speakTextInProgress = false;
-        this.videoSoundService.playVideo(); // Play video after TTS completes
-        this.isEmphasisPresent = false;
-      }, 15000); // Adjust this timeout as needed
-    }
+    this.processingService.getEmphasizedQueues().subscribe(() => {
+      this.announceFirstEmphasisIfNeeded(force);
+    });
   }
 
-  handleNoEmphasis(): void {
-    this.videoSoundService.playVideo();
-    this.isEmphasisPresent = false;
-    this.processingService.showEmphasisOverlay = false;
+  private announceFirstEmphasisIfNeeded(force: boolean = false): void {
+    const emphasized = this.processingService.emphasizedQueues?.[0];
+    const counterNum = emphasized?.tellerNum;
+    const queueNum = emphasized?.queue?.queueNum;
+    const queueType = emphasized?.queue?.type;
+
+    if (!counterNum || !queueNum) return;
+
+    const key = `${queueType || ''}-${queueNum}-${counterNum}`;
+
+    // Avoid endless repeat if backend doesn't change
+    if (!force && this.lastAnnouncementKey === key) return;
+
+    this.lastAnnouncementKey = key;
+
+    const textToSpeak =
+      `Attention, ${queueType} number ${queueNum}, ` +
+      `Please Proceed to counter number ${counterNum}. ` +
+      `Number ${queueNum}, Counter ${counterNum}.`;
+
+    this.textToSpeechService.speak(textToSpeak, this.speechRate);
   }
 }
