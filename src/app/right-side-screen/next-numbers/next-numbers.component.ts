@@ -1,5 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, debounceTime, merge, of, switchMap, takeUntil } from 'rxjs';
+import {
+  EMPTY,
+  Subject,
+  catchError,
+  debounceTime,
+  merge,
+  of,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { ProcessingService } from 'src/app/services/processing.service';
 import { WebSocketService } from 'src/app/services/websocket.service';
 import { TICKET_NUMBER } from 'src/app/utilities/const/right-side-screen';
@@ -27,7 +36,10 @@ export class NextNumbersComponent implements OnInit, OnDestroy {
       this.webSocketService.onQueueUpdate().pipe(debounceTime(300))
     )
       .pipe(
-        switchMap(() => this.processingData.getNextQueues()),
+        switchMap(() =>
+          // a failed round must not kill the stream
+          this.processingData.getNextQueues().pipe(catchError(() => EMPTY))
+        ),
         takeUntil(this.destroy$)
       )
       .subscribe(() => (this.nextQueues = this.processingData.nextQueues));

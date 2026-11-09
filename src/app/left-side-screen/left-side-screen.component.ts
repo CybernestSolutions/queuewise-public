@@ -6,7 +6,14 @@ import { TellerService } from '../services/teller.service';
 import { ProcessingService } from '../services/processing.service';
 import { TextToSpeechService } from '../services/tts.service';
 import { VideoSoundService } from '../services/video-sound.service';
-import { Subscription, debounceTime, merge, switchMap } from 'rxjs';
+import {
+  EMPTY,
+  Subscription,
+  catchError,
+  debounceTime,
+  merge,
+  switchMap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-left-side-screen',
@@ -110,7 +117,10 @@ export class LeftSideScreenComponent implements OnInit, OnDestroy {
       )
         .pipe(
           debounceTime(300),
-          switchMap(() => this.tellerService.getTellersByType(''))
+          switchMap(() =>
+            // a failed round must not kill the stream
+            this.tellerService.getTellersByType('').pipe(catchError(() => EMPTY))
+          )
         )
         .subscribe((tellers) => {
           this.processes = tellers;

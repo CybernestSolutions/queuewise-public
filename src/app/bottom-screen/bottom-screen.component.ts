@@ -1,5 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, debounceTime, forkJoin, merge, of, switchMap, takeUntil } from 'rxjs';
+import {
+  EMPTY,
+  Subject,
+  catchError,
+  debounceTime,
+  forkJoin,
+  merge,
+  of,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import {
   GREETINGS,
   NEW,
@@ -46,7 +56,7 @@ export class BottomScreenComponent implements OnInit, OnDestroy {
             this.tellerService.getQueuesByCategory('new'),
             this.tellerService.getQueuesByCategory('renewal'),
             this.tellerService.getQueuesByCategory('retirement'),
-          ])
+          ]).pipe(catchError(() => EMPTY)) // a failed round must not kill the stream
         ),
         takeUntil(this.destroy$)
       )
