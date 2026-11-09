@@ -15,10 +15,10 @@ import { ProcessingService } from './services/processing.service';
 import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { API_URL } from './utilities/const/api-url';
+import { environment } from '../environments/environment';
 
 const config: SocketIoConfig = {
-  url: API_URL,
+  url: environment.apiUrl,
   options: {},
 };
 

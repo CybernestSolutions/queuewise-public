@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, debounceTime, forkJoin, merge, of, switchMap, takeUntil } from 'rxjs';
 import {
   GREETINGS,
   NEW,
@@ -15,7 +16,8 @@ import { WebSocketService } from '../services/websocket.service';
   templateUrl: './bottom-screen.component.html',
   styleUrls: ['./bottom-screen.component.scss'],
 })
-export class BottomScreenComponent {
+export class BottomScreenComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   constructor(
     private tellerService: TellerService,
     private webSocketService: WebSocketService
@@ -32,42 +34,32 @@ export class BottomScreenComponent {
   retirementInt = 0;
 
   ngOnInit(): void {
-    this.tellerService.getQueuesByCategory('all').subscribe((total: any) => {
-      this.totalQueuesInt = total.count;
-    });
-    this.tellerService.getQueuesByCategory('new').subscribe((total: any) => {
-      this.newMemberInt = total.count;
-    });
-    this.tellerService
-      .getQueuesByCategory('renewal')
-      .subscribe((total: any) => {
-        this.renewalInt = total.count;
+    // initial load + one forkJoin per burst of queueUpdate events
+    merge(
+      of(null),
+      this.webSocketService.onQueueUpdate().pipe(debounceTime(300))
+    )
+      .pipe(
+        switchMap(() =>
+          forkJoin([
+            this.tellerService.getQueuesByCategory('all'),
+            this.tellerService.getQueuesByCategory('new'),
+            this.tellerService.getQueuesByCategory('renewal'),
+            this.tellerService.getQueuesByCategory('retirement'),
+          ])
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([all, nw, renewal, retirement]: any[]) => {
+        this.totalQueuesInt = all.count;
+        this.newMemberInt = nw.count;
+        this.renewalInt = renewal.count;
+        this.retirementInt = retirement.count;
       });
-    this.tellerService
-      .getQueuesByCategory('retirement')
-      .subscribe((total: any) => {
-        this.retirementInt = total.count;
-      });
-    this.setupWebSocket();
   }
-  private setupWebSocket() {
-    this.webSocketService.onQueueUpdate().subscribe((data: any) => {
-      this.tellerService.getQueuesByCategory('all').subscribe((total: any) => {
-        this.totalQueuesInt = total.count;
-      });
-      this.tellerService.getQueuesByCategory('new').subscribe((total: any) => {
-        this.newMemberInt = total.count;
-      });
-      this.tellerService
-        .getQueuesByCategory('renewal')
-        .subscribe((total: any) => {
-          this.renewalInt = total.count;
-        });
-      this.tellerService
-        .getQueuesByCategory('retirement')
-        .subscribe((total: any) => {
-          this.retirementInt = total.count;
-        });
-    });
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

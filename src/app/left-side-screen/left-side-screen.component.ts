@@ -6,7 +6,7 @@ import { TellerService } from '../services/teller.service';
 import { ProcessingService } from '../services/processing.service';
 import { TextToSpeechService } from '../services/tts.service';
 import { VideoSoundService } from '../services/video-sound.service';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime, merge, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-left-side-screen',
@@ -47,8 +47,10 @@ export class LeftSideScreenComponent implements OnInit, OnDestroy {
     );
   }
 
+  private greetingTimer?: ReturnType<typeof setTimeout>;
+
   ngOnInit(): void {
-    setTimeout(() => this.greetings(), 3000);
+    this.greetingTimer = setTimeout(() => this.greetings(), 3000);
 
     this.tellerService.getTellersByType('').subscribe((tellers) => {
       this.processes = tellers;
@@ -59,6 +61,7 @@ export class LeftSideScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.greetingTimer);
     this.subs.unsubscribe();
   }
 
@@ -99,26 +102,25 @@ export class LeftSideScreenComponent implements OnInit, OnDestroy {
   }
 
   private setupWebSocket(): void {
+    // queueUpdate + userCapacityUpdate bursts -> one teller refetch
     this.subs.add(
-      this.webSocketService.onQueueUpdate().subscribe(() => {
-        this.tellerService.getTellersByType('').subscribe((tellers) => {
+      merge(
+        this.webSocketService.onQueueUpdate(),
+        this.webSocketService.userCapacityUpdate()
+      )
+        .pipe(
+          debounceTime(300),
+          switchMap(() => this.tellerService.getTellersByType(''))
+        )
+        .subscribe((tellers) => {
           this.processes = tellers;
-        });
-      })
+        })
     );
 
     // Main trigger for TTS emphasis
     this.subs.add(
       this.webSocketService.ttsUpdate().subscribe(() => {
         this.refreshAndAnnounceIfNeeded(true);
-      })
-    );
-
-    this.subs.add(
-      this.webSocketService.userCapacityUpdate().subscribe(() => {
-        this.tellerService.getTellersByType('').subscribe((tellers) => {
-          this.processes = tellers;
-        });
       })
     );
   }
