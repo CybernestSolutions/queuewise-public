@@ -15,31 +15,28 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "electron": "electron .",
-    "electron-build": "electron-builder"
+    "electron-build": "node -e \"require('fs').rmSync('release',{recursive:true,force:true})\" && electron-builder",
+    "test:updater": "node --test electron/updater.test.js"
   },
   "private": true,
   "dependencies": {
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^16.2.1",
     "@angular/animations": "^16.2.0",
+    "@angular/cli": "~16.2.1",
     "@angular/common": "^16.2.0",
     "@angular/compiler": "^16.2.0",
+    "@angular/compiler-cli": "^16.2.0",
     "@angular/core": "^16.2.0",
     "@angular/forms": "^16.2.0",
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
-    "dexie": "^4.0.10",
-    "electron-log": "^5.4.3",
-    "electron-updater": "^6.6.2",
-    "ngx-socket-io": "^4.5.1",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.13.0"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.1",
-    "@angular/cli": "~16.2.1",
-    "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
+    "dexie": "^4.0.10",
     "electron": "^26.2.1",
     "electron-builder": "^24.6.4",
     "jasmine-core": "~4.6.0",
@@ -48,7 +45,11 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.1.3"
+    "ngx-socket-io": "^4.5.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "typescript": "~5.1.3",
+    "zone.js": "~0.13.0"
   },
   "build": {
     "asar": true,
@@ -59,9 +60,10 @@
     },
     "files": [
       "main.js",
-      "package.json",
+      "electron/**",
+      "!electron/**/*.test.js",
       "dist/queuewise-public-view/**",
-      "node_modules/**"
+      "package.json"
     ],
     "extraMetadata": {
       "main": "main.js"
@@ -69,13 +71,10 @@
     "asarUnpack": [
       "**/*.node"
     ],
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "CybernestSolutions",
-        "repo": "queuewise-public"
-      }
-    ],
+    "publish": {
+      "provider": "generic",
+      "url": "https://updates.cybernestsolution.com/queuewise/public-display/"
+    },
     "win": {
       "target": "nsis",
       "icon": "src/assets/icon-glow.ico"
