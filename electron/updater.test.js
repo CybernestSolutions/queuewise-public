@@ -17,8 +17,9 @@ function make(role, start = '2026-11-10T14:00:00') {
   const keys = {};
   const globalShortcut = { register: (k, fn) => ((keys[k] = fn), true), unregisterAll() {} };
   const log = { info() {}, warn() {}, error() {} };
-  setupUpdater({
-    autoUpdater: au, app: new EventEmitter(), globalShortcut, ipcMain, role, log,
+  const ready = [];
+  const { installNow } = setupUpdater({
+    autoUpdater: au, onReady: (i) => ready.push(i), app: new EventEmitter(), globalShortcut, ipcMain, role, log,
     now: () => new Date(t),
     setTimer: (fn, ms) => timers.push({ fn, at: t + ms }),
   });
@@ -36,7 +37,7 @@ function make(role, start = '2026-11-10T14:00:00') {
   };
   const download = (notes) => au.emit('update-downloaded', { version: '2.0.0', releaseNotes: notes });
   const H = 3600e3;
-  return { au, calls, ipcMain, keys, tick, download, H };
+  return { au, calls, ipcMain, keys, tick, download, H, ready, installNow };
 }
 
 test('normal release: no install until 05:00', () => {
@@ -90,6 +91,29 @@ test('idle true does not install a normal release', () => {
   const s = make('kiosk');
   s.download('plain');
   s.ipcMain.emit(IDLE_CHANNEL, {}, true);
+  assert.equal(s.calls.install.length, 0);
+});
+
+test('urgent teller: onReady urgent, no auto-install; installNow installs once', () => {
+  const s = make('teller');
+  s.download('[urgent] fix');
+  assert.deepEqual(s.ready, [{ urgent: true, version: '2.0.0' }]);
+  assert.equal(s.calls.install.length, 0);
+  s.installNow();
+  s.installNow();
+  assert.deepEqual(s.calls.install, [[true, true]]);
+});
+
+test('normal teller release: onReady reports urgent false, no install until 05:00', () => {
+  const s = make('teller');
+  s.download('plain');
+  assert.deepEqual(s.ready, [{ urgent: false, version: '2.0.0' }]);
+  assert.equal(s.calls.install.length, 0);
+});
+
+test('installNow is a no-op before a download', () => {
+  const s = make('teller');
+  s.installNow();
   assert.equal(s.calls.install.length, 0);
 });
 

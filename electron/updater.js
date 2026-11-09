@@ -11,7 +11,7 @@ function notesOf(info) {
   return Array.isArray(n) ? n.map((x) => x.note || '').join('\n') : String(n || '');
 }
 
-function setupUpdater({ autoUpdater, app, globalShortcut, ipcMain, role, now = () => new Date(), setTimer = setTimeout, log = console }) {
+function setupUpdater({ autoUpdater, app, globalShortcut, ipcMain, role, onReady, now = () => new Date(), setTimer = setTimeout, log = console }) {
   let downloaded = false;
   let urgent = false;
   let idle = false;
@@ -57,6 +57,7 @@ function setupUpdater({ autoUpdater, app, globalShortcut, ipcMain, role, now = (
     urgent = URGENT_RE.test(notesOf(info));
     log.info(`Update ${info && info.version} downloaded (urgent=${urgent}); install at 05:00 or next start`);
     setTimer(install, msUntil5am()); // normal path, and fallback for urgent kiosk/teller
+    if (onReady) onReady({ urgent, version: info && info.version }); // lets a UI offer "restart now"
     if (urgent && (role === 'display' || (role === 'kiosk' && idle))) install();
   });
 
@@ -70,6 +71,7 @@ function setupUpdater({ autoUpdater, app, globalShortcut, ipcMain, role, now = (
     log.warn(`Could not register ${hotkey}`);
   }
   app.on('will-quit', () => globalShortcut.unregisterAll());
+  return { installNow: install };
 }
 
 module.exports = { setupUpdater, IDLE_CHANNEL };
