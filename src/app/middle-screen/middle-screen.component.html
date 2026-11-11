@@ -2,25 +2,33 @@
   <div class="video-container">
     <video
       #videoElement
-      controls
       id="video"
-      controls
       autoplay
+      preload="auto"
+      disablePictureInPicture
       (ended)="playNextVideo()"
-      (play)="onPlay()"
-      (pause)="onPause()"
     ></video>
   </div>
-  <div class="overlay" *ngIf="showOverlay">
+  <div class="overlay" *ngIf="showOverlay || !videos.length">
     <div class="inside-overlay">
       <div class="buttons">
         <button (click)="selectVideos()">Import</button>
-        <button (click)="PlayAndreloadScreen()">Play All</button>
+        <button (click)="playAll()">Play All</button>
+        <button
+          *ngIf="videos.length"
+          class="delete-all"
+          [class.armed]="deleteArmed"
+          (click)="deleteAll()"
+        >
+          {{ deleteArmed ? 'Tap again to delete all (5s)' : 'Delete All' }}
+        </button>
       </div>
       <div class="file-count">
         <p *ngIf="selectedFileCount != 0">
           {{ selectedFileCount }} Selected Files
         </p>
+        <p *ngIf="!videos.length" class="empty">No videos imported</p>
+        <p class="hint">Esc or double-click hides this menu</p>
       </div>
       <input
         type="file"

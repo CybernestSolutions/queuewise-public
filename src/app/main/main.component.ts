@@ -11,6 +11,6 @@ export class MainComponent {
   next = NEXT;
   binanLogoImg = 'assets/images/binan-logo.png';
   bploLogoImg = 'assets/images/bplo-logo.png';
-  backgroundImg = 'assets/images/background.png';
+  backgroundImg = 'assets/images/background.webp';
 
 }

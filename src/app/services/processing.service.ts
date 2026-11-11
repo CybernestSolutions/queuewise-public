@@ -21,17 +21,6 @@ export class ProcessingService {
     // },
   ];
 
-  getTellers() {
-    this.tellerService.getTellersByType('').subscribe((tellers) => {
-      this.processes = tellers;
-      this.processes.forEach((process) => {
-        if (process.emphasis) {
-          this.emphasizedQueues.push(process);
-        }
-      });
-    });
-  }
-
   getEmphasizedQueues(): Observable<any[]> {
     return this.tellerService.getEmphasizedTellers().pipe(
       tap((queues: any[]) => {
@@ -41,18 +30,20 @@ export class ProcessingService {
     );
   }
 
-  getNextQueues() {
-    this.tellerService.getNextQueues().subscribe((queues) => {
-      this.nextQueues = queues.filter((queue) => queue.status === 'raw');
-      this.nextQueues.sort((a, b) => {
-        if (a.queueNum.startsWith('P') && !b.queueNum.startsWith('P')) {
-          return -1; // Priority queue comes first
-        } else if (!a.queueNum.startsWith('P') && b.queueNum.startsWith('P')) {
-          return 1; // Non-priority queue comes later
-        } else {
-          return 0; // Preserve the original order
-        }
-      });
-    });
+  getNextQueues(): Observable<any[]> {
+    return this.tellerService.getNextQueues().pipe(
+      tap((queues) => {
+        this.nextQueues = queues.filter((queue) => queue.status === 'raw');
+        this.nextQueues.sort((a, b) => {
+          if (a.queueNum.startsWith('P') && !b.queueNum.startsWith('P')) {
+            return -1; // Priority queue comes first
+          } else if (!a.queueNum.startsWith('P') && b.queueNum.startsWith('P')) {
+            return 1; // Non-priority queue comes later
+          } else {
+            return 0; // Preserve the original order
+          }
+        });
+      })
+    );
   }
 }

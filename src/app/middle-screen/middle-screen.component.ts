@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { VideoSoundService } from '../services/video-sound.service';
 import Dexie from 'dexie';
 
@@ -22,14 +22,27 @@ class VideoDatabase extends Dexie {
   templateUrl: './middle-screen.component.html',
   styleUrls: ['./middle-screen.component.scss'],
 })
-export class MiddleScreenComponent implements OnInit {
+export class MiddleScreenComponent implements OnInit, OnDestroy {
+  /** Window for the second "Delete All" tap. */
+  static readonly CONFIRM_MS = 5000;
+
   constructor(private videoSoundService: VideoSoundService) {}
+
+  @ViewChild('videoElement', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
 
   videos: { name: string; blob: Blob }[] = [];
   videoIndex = 0;
   showOverlay = true;
   selectedFileCount = 0;
   db = new VideoDatabase();
+  private currentUrl: string | null = null;
+  /** First "Delete All" tap arms it (red); a second tap within CONFIRM_MS deletes. */
+  deleteArmed = false;
+  private disarmTimer?: ReturnType<typeof setTimeout>;
+
+  private get video(): HTMLVideoElement {
+    return this.videoRef.nativeElement;
+  }
 
   async ngOnInit(): Promise<void> {
     // Load videos from Dexie database on initialization
@@ -38,7 +51,12 @@ export class MiddleScreenComponent implements OnInit {
       name: video.name,
       blob: video.blob,
     }));
+    this.selectedFileCount = this.videos.length;
     this.play();
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.disarmTimer);
   }
 
   async handleFileInput(event: Event) {
@@ -57,56 +75,81 @@ export class MiddleScreenComponent implements OnInit {
   }
 
   play() {
-    const videoElement = document.getElementById('video') as HTMLVideoElement;
+    const videoElement = this.video;
     this.videoSoundService.setVideoElement(videoElement);
     this.videoSoundService.setVolume(0.25);
 
     if (this.videos.length > 0) {
-      const videoBlob = this.videos[this.videoIndex].blob;
-      const videoPath = URL.createObjectURL(videoBlob);
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play();
+      this.videoIndex = Math.min(this.videoIndex, this.videos.length - 1);
+      // One clip: let the element loop natively, no src swap / load() per cycle.
+      videoElement.loop = this.videos.length === 1;
+      this.setSource(this.videoIndex);
       this.showOverlay = false;
-
-      videoElement.onended = () => {
-        this.playNextVideo();
-      };
     } else {
-      // If no videos are selected, play a default video
-      const defaultVideoPath = 'assets/videos/1.mp4'; // Change to your default video path
-      videoElement.src = defaultVideoPath;
+      // Nothing imported. assets/videos is not shipped, so there is no default clip: empty the element
+      // (the watchdog sees no source and stays idle) and keep the import overlay up.
+      videoElement.loop = false;
+      videoElement.pause();
+      videoElement.removeAttribute('src');
       videoElement.load();
-      videoElement.play();
-      videoElement.loop = true; // Loop the default video
-      this.showOverlay = false;
+      if (this.currentUrl) URL.revokeObjectURL(this.currentUrl);
+      this.currentUrl = null;
+      this.showOverlay = true;
     }
   }
 
+  // Bound once, from the template's (ended). Not reached when loop is on.
   playNextVideo() {
-    const videoElement = document.getElementById('video') as HTMLVideoElement;
-
-    if (this.videos.length > 0) {
+    if (this.videos.length > 1) {
       this.videoIndex = (this.videoIndex + 1) % this.videos.length;
-      const videoBlob = this.videos[this.videoIndex].blob;
-      const videoPath = URL.createObjectURL(videoBlob);
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play();
+      this.setSource(this.videoIndex);
     }
   }
 
-    PlayAndreloadScreen() {
-    this.play()
-    window.location.reload();
+  private setSource(index: number): void {
+    const videoElement = this.video;
+    const previous = this.currentUrl;
+    this.currentUrl = URL.createObjectURL(this.videos[index].blob);
+    videoElement.src = this.currentUrl;
+    videoElement.load();
+    // AbortError when a newer load() supersedes this play(); the watchdog covers real failures.
+    videoElement.play().catch(() => {});
+    if (previous) URL.revokeObjectURL(previous);
   }
 
-  onPlay() {
-    this.showOverlay = false;
+  /** "Play All": start the imported list from the top. No page reload. */
+  playAll() {
+    this.videoIndex = 0;
+    this.play();
   }
 
-  onPause() {
-    this.showOverlay = true;
+  /** "Delete All": two taps within CONFIRM_MS, never a blocking confirm(). */
+  async deleteAll(): Promise<void> {
+    if (!this.deleteArmed) {
+      this.deleteArmed = true;
+      this.disarmTimer = setTimeout(() => (this.deleteArmed = false), MiddleScreenComponent.CONFIRM_MS);
+      return;
+    }
+    clearTimeout(this.disarmTimer);
+    this.deleteArmed = false;
+    try {
+      await this.db.videos.clear();
+    } catch (e) {
+      console.error('[tv] delete all videos failed:', e); // nothing was cleared: keep playing what is stored
+      return;
+    }
+    this.videos = [];
+    this.videoIndex = 0;
+    this.selectedFileCount = 0;
+    this.play();
+  }
+
+  // The video has no controls (nothing on the TV can pause it by accident), so the
+  // operator opens the import overlay with Escape or a double-click instead.
+  @HostListener('document:keydown.escape')
+  @HostListener('dblclick')
+  toggleOverlay() {
+    this.showOverlay = !this.showOverlay;
   }
 
   selectVideos() {

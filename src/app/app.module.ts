@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { DeviceReportService } from './services/device-report.service';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -15,10 +16,10 @@ import { ProcessingService } from './services/processing.service';
 import { LeftSideScreenComponent } from './left-side-screen/left-side-screen.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { API_URL } from './utilities/const/api-url';
+import { environment } from '../environments/environment';
 
 const config: SocketIoConfig = {
-  url: API_URL,
+  url: environment.apiUrl,
   options: {},
 };
 
@@ -41,7 +42,10 @@ const config: SocketIoConfig = {
     HttpClientModule,
     SocketIoModule.forRoot(config),
   ],
-  providers: [ProcessingService],
+  providers: [
+    ProcessingService,
+    { provide: APP_INITIALIZER, multi: true, deps: [DeviceReportService], useFactory: (d: DeviceReportService) => () => d.init() },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

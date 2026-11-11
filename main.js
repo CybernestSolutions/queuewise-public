@@ -1,18 +1,11 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, powerSaveBlocker } = require('electron');
 const path = require('path');
 const url = require('url');
-
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
+const { setupUpdater } = require('./electron/updater');
 
 let mainWindow;
-
-/* ------------------ AUTO UPDATER SETUP ------------------ */
-log.transports.file.level = 'info';
-autoUpdater.logger = log;
-autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = true;
-/* -------------------------------------------------------- */
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,8 +13,13 @@ function createWindow() {
     height: 600,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
-      webSecurity: false,
+      contextIsolation: true,
+      nodeIntegration: false,
+      // Kiosk TV: keep timers, rAF and the Page Visibility state "visible" even
+      // when Windows reports the window occluded (toast, installer, HDMI blip);
+      // Chromium pauses hidden media otherwise. Autoplay needs no gesture here.
+      backgroundThrottling: false,
+      autoplayPolicy: 'no-user-gesture-required',
     },
   });
 
@@ -35,52 +33,31 @@ function createWindow() {
 
   mainWindow.setFullScreen(true);
 
+  // Renderer "[tv]" lines (watchdog recoveries, reload reasons) land in the
+  // device's electron-log file so they can be read without DevTools.
+  mainWindow.webContents.on('console-message', (_e, _level, message) => {
+    if (typeof message === 'string' && message.startsWith('[tv]')) log.info(message);
+  });
+  mainWindow.webContents.on('render-process-gone', (_e, details) => {
+    log.error('[tv] renderer gone:', details && details.reason, '- reloading');
+    mainWindow && mainWindow.webContents.reload();
+  });
+  mainWindow.webContents.on('unresponsive', () => log.warn('[tv] renderer unresponsive'));
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
 
-/* ------------------ APP LIFECYCLE ------------------ */
 app.whenReady().then(() => {
+  // The TV must never let Windows blank the screen or sleep the box.
+  const blocker = powerSaveBlocker.start('prevent-display-sleep');
+  log.info('[tv] powerSaveBlocker active:', powerSaveBlocker.isStarted(blocker));
   createWindow();
-
-
-autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'CybernestSolutions',
-  repo: 'queuewise-public',
-  private: true,
-  token: process.env.GH_TOKEN
+  log.transports.file.level = 'info';
+  setupUpdater({ autoUpdater, app, globalShortcut, ipcMain, role: 'display', log });
 });
 
-  setTimeout(() => {
-    autoUpdater.checkForUpdates();
-  }, 5000);
-
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, 1000 * 60 * 30);
-});
-
-autoUpdater.on('checking-for-update', () => {
-  log.info('Checking for update...');
-});
-
-autoUpdater.on('update-available', (info) => {
-  log.info('Update available:', info.version);
-});
-
-autoUpdater.on('update-not-available', () => {
-  log.info('No update available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-  log.info('Update downloaded — installing...');
-  setTimeout(() => {
-    autoUpdater.quitAndInstall(false, true);
-  }, 3000);
-});
-
-autoUpdater.on('error', (err) => {
-  log.error('Updater error:', err);
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
 });
