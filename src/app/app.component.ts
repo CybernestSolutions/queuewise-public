@@ -9,6 +9,7 @@ import { ProcessingService } from './services/processing.service';
 export class AppComponent implements OnInit {
   title = 'queuewise-public-view';
 
+  // TODO: remove after leak fixes verified on a display
   ngOnInit(): void {
     setInterval(() => {
       window.location.reload();

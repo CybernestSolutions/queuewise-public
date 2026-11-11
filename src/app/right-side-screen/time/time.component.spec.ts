@@ -1,21 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { fakeAsync, tick } from '@angular/core/testing';
 import { TimeComponent } from './time.component';
 
 describe('TimeComponent', () => {
-  let component: TimeComponent;
-  let fixture: ComponentFixture<TimeComponent>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [TimeComponent]
-    });
-    fixture = TestBed.createComponent(TimeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('ticks every second and stops after destroy', fakeAsync(() => {
+    const cmp = new TimeComponent();
+    const spy = spyOn(cmp, 'updateDateTime').and.callThrough();
+    tick(3000);
+    expect(spy).toHaveBeenCalledTimes(3);
+    cmp.ngOnDestroy();
+    tick(5000);
+    expect(spy).toHaveBeenCalledTimes(3);
+  }));
 });
