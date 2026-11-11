@@ -3,7 +3,7 @@
     class="counter"
     [ngClass]="{
       'priority-z-index':
-        processingService.emphasizedQueues[0]?.queue.priority == true
+        processingService.emphasizedQueues[0]?.queue?.priority == true
     }"
   >
     <span>
@@ -25,7 +25,7 @@
     class="counter counter-priority"
     [ngClass]="{
       'priority-z-index':
-        processingService.emphasizedQueues[0]?.queue.priority == false
+        processingService.emphasizedQueues[0]?.queue?.priority == false
     }"
   >
     <span> PRIORITY </span>
