@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { VideoSoundService } from '../services/video-sound.service';
 import Dexie from 'dexie';
 
@@ -25,11 +25,18 @@ class VideoDatabase extends Dexie {
 export class MiddleScreenComponent implements OnInit {
   constructor(private videoSoundService: VideoSoundService) {}
 
+  @ViewChild('videoElement', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
+
   videos: { name: string; blob: Blob }[] = [];
   videoIndex = 0;
   showOverlay = true;
   selectedFileCount = 0;
   db = new VideoDatabase();
+  private currentUrl: string | null = null;
+
+  private get video(): HTMLVideoElement {
+    return this.videoRef.nativeElement;
+  }
 
   async ngOnInit(): Promise<void> {
     // Load videos from Dexie database on initialization
@@ -38,6 +45,7 @@ export class MiddleScreenComponent implements OnInit {
       name: video.name,
       blob: video.blob,
     }));
+    this.selectedFileCount = this.videos.length;
     this.play();
   }
 
@@ -57,56 +65,57 @@ export class MiddleScreenComponent implements OnInit {
   }
 
   play() {
-    const videoElement = document.getElementById('video') as HTMLVideoElement;
+    const videoElement = this.video;
     this.videoSoundService.setVideoElement(videoElement);
     this.videoSoundService.setVolume(0.25);
 
     if (this.videos.length > 0) {
-      const videoBlob = this.videos[this.videoIndex].blob;
-      const videoPath = URL.createObjectURL(videoBlob);
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play();
+      this.videoIndex = Math.min(this.videoIndex, this.videos.length - 1);
+      // One clip: let the element loop natively, no src swap / load() per cycle.
+      videoElement.loop = this.videos.length === 1;
+      this.setSource(this.videoIndex);
       this.showOverlay = false;
-
-      videoElement.onended = () => {
-        this.playNextVideo();
-      };
     } else {
       // If no videos are selected, play a default video
       const defaultVideoPath = 'assets/videos/1.mp4'; // Change to your default video path
+      videoElement.loop = true; // Loop the default video
       videoElement.src = defaultVideoPath;
       videoElement.load();
-      videoElement.play();
-      videoElement.loop = true; // Loop the default video
-      this.showOverlay = false;
+      videoElement.play().catch(() => {});
     }
   }
 
+  // Bound once, from the template's (ended). Not reached when loop is on.
   playNextVideo() {
-    const videoElement = document.getElementById('video') as HTMLVideoElement;
-
-    if (this.videos.length > 0) {
+    if (this.videos.length > 1) {
       this.videoIndex = (this.videoIndex + 1) % this.videos.length;
-      const videoBlob = this.videos[this.videoIndex].blob;
-      const videoPath = URL.createObjectURL(videoBlob);
-      videoElement.src = videoPath;
-      videoElement.load();
-      videoElement.play();
+      this.setSource(this.videoIndex);
     }
   }
 
-    PlayAndreloadScreen() {
-    this.play()
-    window.location.reload();
+  private setSource(index: number): void {
+    const videoElement = this.video;
+    const previous = this.currentUrl;
+    this.currentUrl = URL.createObjectURL(this.videos[index].blob);
+    videoElement.src = this.currentUrl;
+    videoElement.load();
+    // AbortError when a newer load() supersedes this play(); the watchdog covers real failures.
+    videoElement.play().catch(() => {});
+    if (previous) URL.revokeObjectURL(previous);
   }
 
-  onPlay() {
-    this.showOverlay = false;
+  /** "Play All": start the imported list from the top. No page reload. */
+  playAll() {
+    this.videoIndex = 0;
+    this.play();
   }
 
-  onPause() {
-    this.showOverlay = true;
+  // The video has no controls (nothing on the TV can pause it by accident), so the
+  // operator opens the import overlay with Escape or a double-click instead.
+  @HostListener('document:keydown.escape')
+  @HostListener('dblclick')
+  toggleOverlay() {
+    this.showOverlay = !this.showOverlay;
   }
 
   selectVideos() {
