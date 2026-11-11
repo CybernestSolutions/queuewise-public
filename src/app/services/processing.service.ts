@@ -21,17 +21,6 @@ export class ProcessingService {
     // },
   ];
 
-  getTellers() {
-    this.tellerService.getTellersByType('').subscribe((tellers) => {
-      this.processes = tellers;
-      this.processes.forEach((process) => {
-        if (process.emphasis) {
-          this.emphasizedQueues.push(process);
-        }
-      });
-    });
-  }
-
   getEmphasizedQueues(): Observable<any[]> {
     return this.tellerService.getEmphasizedTellers().pipe(
       tap((queues: any[]) => {
