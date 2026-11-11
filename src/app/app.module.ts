@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { DeviceReportService } from './services/device-report.service';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -41,7 +42,10 @@ const config: SocketIoConfig = {
     HttpClientModule,
     SocketIoModule.forRoot(config),
   ],
-  providers: [ProcessingService],
+  providers: [
+    ProcessingService,
+    { provide: APP_INITIALIZER, multi: true, deps: [DeviceReportService], useFactory: (d: DeviceReportService) => () => d.init() },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
