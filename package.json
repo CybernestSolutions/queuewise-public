@@ -1,6 +1,6 @@
 {
   "name": "queuewise-public-view",
-  "version": "26.1.9",
+  "version": "26.2.0",
   "description": "An app for BPLO to display the queue number of the clients",
   "author": {
     "name": "Cybernest Solutions",

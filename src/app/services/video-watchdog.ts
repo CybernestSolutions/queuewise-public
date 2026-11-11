@@ -4,11 +4,13 @@ export interface WatchedVideo {
   paused: boolean;
   ended: boolean;
   currentTime: number;
+  /** '' when the element has no source (nothing imported): idle, not a stall. */
+  src?: string;
   play(): Promise<void> | void;
   load(): void;
 }
 
-export type WatchdogResult = 'ok' | 'held' | 'resumed' | 'reloaded';
+export type WatchdogResult = 'ok' | 'held' | 'idle' | 'resumed' | 'reloaded';
 
 export class VideoWatchdog {
   /** Total recoveries since boot (for logs). */
@@ -44,6 +46,14 @@ export class VideoWatchdog {
       if (now - this.heldSince <= this.opts.holdMaxMs) return 'held';
       this.opts.log(`[tv] tv-watchdog: hold expired after ${now - this.heldSince}ms, resuming`);
       this.heldSince = null;
+    }
+
+    if (video.src === '') {
+      // No source (nothing imported, or everything deleted): nothing to keep alive, so no recovery or reload.
+      this.stuckTicks = 0;
+      this.consecutiveFailures = 0;
+      this.lastTime = -1;
+      return 'idle';
     }
 
     if (video.paused) {

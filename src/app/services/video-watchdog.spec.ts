@@ -4,6 +4,7 @@ class FakeVideo implements WatchedVideo {
   paused = false;
   ended = false;
   currentTime = 0;
+  src?: string;
   plays = 0;
   loads = 0;
   rejectPlay = false;
@@ -114,5 +115,13 @@ describe('VideoWatchdog', () => {
     await Promise.resolve();
     await Promise.resolve();
     expect(logs.some((l) => l.includes('play() rejected'))).toBeTrue();
+  });
+
+  it('stays idle with no source (nothing imported): no recovery, no failures, no reload', () => {
+    v.src = '';
+    v.paused = true;
+    for (let i = 1; i <= 10; i++) expect(wd.tick(v, i * T)).toBe('idle');
+    expect([v.plays, v.loads, wd.recoveries, wd.consecutiveFailures]).toEqual([0, 0, 0, 0]);
+    expect(logs).toEqual([]);
   });
 });

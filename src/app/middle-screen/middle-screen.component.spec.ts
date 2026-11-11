@@ -1,3 +1,4 @@
+import { fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { MiddleScreenComponent } from './middle-screen.component';
 
 describe('MiddleScreenComponent', () => {
@@ -14,6 +15,8 @@ describe('MiddleScreenComponent', () => {
       loop: false,
       load: jasmine.createSpy('load'),
       play: jasmine.createSpy('play').and.returnValue(Promise.resolve()),
+      pause: jasmine.createSpy('pause'),
+      removeAttribute: jasmine.createSpy('removeAttribute').and.callFake((a: string) => a === 'src' && (video.src = '')),
     };
     sound = { setVideoElement: jasmine.createSpy('set'), setVolume: jasmine.createSpy('vol') };
     cmp = new MiddleScreenComponent(sound as any);
@@ -72,11 +75,62 @@ describe('MiddleScreenComponent', () => {
     expect(video.src).toBe(created[created.length - 1]);
   });
 
-  it('falls back to the default asset with loop when nothing is imported', () => {
+  it('with nothing imported: no default asset, empty source, import overlay stays up', () => {
     cmp.play();
-    expect(video.src).toContain('assets/videos/1.mp4');
-    expect(video.loop).toBeTrue();
+    expect(video.src).toBe('');
+    expect(video.removeAttribute).toHaveBeenCalledWith('src');
+    expect(video.play).not.toHaveBeenCalled();
+    expect(cmp.showOverlay).toBeTrue();
     expect(created.length).toBe(0);
+  });
+
+  describe('Delete All', () => {
+    let clear: jasmine.Spy;
+    beforeEach(() => {
+      clear = jasmine.createSpy('clear').and.returnValue(Promise.resolve());
+      (cmp as any).db = { videos: { clear } };
+      cmp.videos = ['a', 'b'].map((n) => ({ name: n, blob: blob(n) }));
+      cmp.selectedFileCount = 2;
+      cmp.play();
+      cmp.playNextVideo();
+    });
+    afterEach(() => cmp.ngOnDestroy());
+
+    it('first tap only arms it; it disarms after 5 s without deleting', fakeAsync(() => {
+      cmp.deleteAll();
+      expect(cmp.deleteArmed).toBeTrue();
+      tick(4999);
+      expect(cmp.deleteArmed).toBeTrue();
+      tick(1);
+      expect(cmp.deleteArmed).toBeFalse();
+      expect(clear).not.toHaveBeenCalled();
+      expect(cmp.videos.length).toBe(2);
+    }));
+
+    it('a second tap within 5 s clears the table and state, revokes the blob URL, empties the element', fakeAsync(() => {
+      const live = video.src;
+      cmp.deleteAll();
+      tick(3000);
+      cmp.deleteAll();
+      flushMicrotasks();
+      expect(clear).toHaveBeenCalledTimes(1);
+      expect([cmp.videos.length, cmp.videoIndex, cmp.selectedFileCount, cmp.deleteArmed]).toEqual([0, 0, 0, false]);
+      expect(revoked).toContain(live);
+      expect(video.src).toBe('');
+      expect(cmp.showOverlay).toBeTrue();
+      tick(5000); // the disarm timer was cancelled: nothing re-arms or throws
+      expect(cmp.deleteArmed).toBeFalse();
+    }));
+
+    it('keeps the videos if the database clear fails', fakeAsync(() => {
+      clear.and.returnValue(Promise.reject(new Error('quota')));
+      spyOn(console, 'error');
+      cmp.deleteAll();
+      cmp.deleteAll();
+      flushMicrotasks();
+      expect(cmp.videos.length).toBe(2);
+      expect(console.error).toHaveBeenCalled();
+    }));
   });
 
   it('toggles the overlay (Escape / double-click) without touching playback', () => {

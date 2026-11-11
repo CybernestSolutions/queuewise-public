@@ -70,6 +70,16 @@
           transition: ease-in-out 0.3s;
           box-shadow: inset 0 0 10px var(--color-dark-blue);
         }
+
+        // Armed (waiting for the confirming tap): red, smaller text so the prompt fits the 200px button.
+        button.delete-all.armed,
+        button.delete-all.armed:hover {
+          background-color: #c62828;
+          border-color: #ff8a80;
+          color: var(--color-white);
+          box-shadow: 0 0 12px #ff5252;
+          font-size: 24px;
+        }
       }
 
       input {
