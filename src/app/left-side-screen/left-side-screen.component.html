@@ -12,7 +12,8 @@
   </div>
   <div class="queue-container">
     <div class="queues" *ngFor="let process of processes; let i = index">
-      <div *ngIf="process.tellerType == 'regular' && process.active == true">
+      <!-- a teller holding a ticket is shown even if the server has it inactive (it is still serving) -->
+      <div *ngIf="process.tellerType == 'regular' && (process.active == true || process.queue?.queueNum)">
         <app-processing-numbers
           [windowNum]="process.tellerNum"
           [queueNum]="process.queue?.queueNum"
@@ -33,7 +34,7 @@
   <div class="queue-container">
     <div class="queues" *ngFor="let process of processes; let i = index">
       <div
-        *ngIf="process.tellerType === 'priority' && process.active == true"
+        *ngIf="process.tellerType === 'priority' && (process.active == true || process.queue?.queueNum)"
         class="z-index"
       >
         <app-priority-processing-numbers
